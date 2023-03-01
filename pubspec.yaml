@@ -38,7 +38,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   font_awesome_flutter: ^10.4.0
   syncfusion_flutter_charts: ^20.4.52
-  
+  google_fonts: ^4.0.3
 dev_dependencies:
   flutter_test:
     sdk: flutter
