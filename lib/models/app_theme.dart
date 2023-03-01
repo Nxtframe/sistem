@@ -4,7 +4,7 @@ class AppTheme {
   int backgroundColor;
 
   AppTheme({
-    this.appBarColor = 0xff00aeff,
-    this.backgroundColor=0x33EEF0F4
+    this.appBarColor = 0xFFE4ECEF,
+    this.backgroundColor=0x33EEF0F4,
   });
 }

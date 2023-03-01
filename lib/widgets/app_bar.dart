@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sistem/models/app_theme.dart';
 
-class AppBarWidget extends StatelessWidget {
+class AppBarWidget extends StatelessWidget with PreferredSizeWidget {
   AppBarWidget({super.key});
 
   AppTheme appTheme = AppTheme();
@@ -11,9 +11,7 @@ class AppBarWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     String userProfilePictureValue =
         "https://fastly.picsum.photos/id/1008/200/200.jpg?hmac=I0T_cpYR-61pUlB0jVB4I5B7tL0fvzN5MgslAOirM50";
-    return Scaffold(
-      backgroundColor: Color(appTheme.backgroundColor),
-      appBar: AppBar(
+    return AppBar(
           title: IconButton(
             icon: FaIcon(FontAwesomeIcons.bars),
             onPressed: () => {print("test")},
@@ -45,16 +43,19 @@ class AppBarWidget extends StatelessWidget {
                                 alternateImage,
                               ),
                     ),
-                          ),Text("Fersdwadawdawwadwa")]),
+                          ),Text("Username",style: TextStyle(color: Colors.black),)]),
                     )
                 )],
                 )
               ],
             )
-          ]),
+          ]);
      
-    );
   }
+  
+  @override
+  // TODO: implement preferredSize
+  Size get preferredSize => Size.fromHeight(kToolbarHeight);
 }
 
 var alternateImage =
