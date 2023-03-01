@@ -12,7 +12,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBarWidget(),
-      body: Column(children: [Row(),Row()]),
+      body: Column(children: [Row(children: [CardWidget(),CardWidget()],),Row(children: [CardWidget(),CardWidget()])]),
     );
   }
 }
