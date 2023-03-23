@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sistem/models/app_theme.dart';
 import 'package:sistem/screens/splash_screen.dart';
+import 'package:sistem/services/auth/authenticated_aws.dart';
 import 'package:sistem/theme/theme_constants.dart';
 import 'package:sistem/theme/theme_manager.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
@@ -8,13 +9,13 @@ import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'amplifyconfiguration.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 ThemeManager _themeManager = ThemeManager();
 
 class MyApp extends StatefulWidget {
-  MyApp({super.key});
+  const MyApp({super.key});
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -44,15 +45,16 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-
-      debugShowCheckedModeBanner: false,
-      title: 'SISTEM',
-      theme: LightTheme,
-      darkTheme: DarkTheme,
-      themeMode: _themeManager.themeMode,
-
-      home: const SplashScreen(),
+    return AuthenticatedAmplify(
+      children: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'SISTEM',
+        theme: LightTheme,
+        darkTheme: DarkTheme,
+        themeMode: _themeManager.themeMode,
+    
+        home: const SplashScreen(),
+      ),
     );
   }
 }

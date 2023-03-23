@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sistem/screens/login_page.dart';
 import 'package:sistem/widgets/app_bar.dart';
 import 'package:sistem/widgets/cards.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -21,7 +20,7 @@ class _HomePageState extends State<HomePage> {
     _tooltipBehavior = TooltipBehavior(enable: true); 
     super.initState();
   }
-
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBarWidget(), 
@@ -93,7 +92,7 @@ class _HomePageState extends State<HomePage> {
               ])
         ]),
       ),
-      endDrawer: Container(               // The Profile Drawer, right side drawer
+      endDrawer: SizedBox(               // The Profile Drawer, right side drawer
         width: MediaQuery.of(context).size.width / 1.25,
         child: Drawer(
           child: Column(
