@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:sistem/models/app_theme.dart';
+import 'package:sistem/theme/app_theme.dart';
 
 class AppBarWidget extends StatelessWidget with PreferredSizeWidget {
   AppBarWidget({super.key});

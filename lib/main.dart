@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:sistem/models/app_theme.dart';
+import 'package:provider/provider.dart';
+import 'package:sistem/provider/login_provider.dart';
+import 'package:sistem/screens/signin_page.dart';
+import 'package:sistem/theme/app_theme.dart';
 import 'package:sistem/screens/splash_screen.dart';
 import 'package:sistem/services/auth/authenticated_aws.dart';
 import 'package:sistem/theme/theme_constants.dart';
@@ -9,7 +12,10 @@ import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'amplifyconfiguration.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(create:(_) => Something())
+  ],
+  child: MyApp(),));
 }
 
 ThemeManager _themeManager = ThemeManager();
@@ -45,16 +51,18 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return AuthenticatedAmplify(
-      children: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'SISTEM',
-        theme: LightTheme,
-        darkTheme: DarkTheme,
-        themeMode: _themeManager.themeMode,
-    
-        home: const SplashScreen(),
-      ),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'SISTEM',
+      theme: LightTheme,
+      darkTheme: DarkTheme,
+      themeMode: _themeManager.themeMode,
+      initialRoute: '/',
+      routes: {
+        '/': (context) => SplashScreen(),
+        'signIn': (context) => SignInPage(),
+        
+      },
     );
   }
 }

@@ -1,0 +1,29 @@
+type Organization @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  organization_name: String
+  organization_created: String
+  organization_age: Int
+}
+
+type Employee @model @auth(rules: [{allow: public}, {allow: owner}]) {
+  id: ID!
+  employee_role: String
+  employee_organization: String
+  EmployeeToInventory: Inventory @hasOne
+  employee_email: AWSEmail
+  employee_phone: Int
+  employee_age: Int
+  employee_created: String
+}
+
+type Inventory @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  stock_name: String!
+  stock_added: String
+  stock_organization: ID
+  stock_no: Int
+  stock_sold: String
+  stock_sold_today: String
+  stock_last_added: String
+  stock_created: String
+}
