@@ -2,7 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 
-class LoginProvider extends ChangeNotifier {
+class Something extends ChangeNotifier {
+
+  int _count = 0;
+
+  int get count => _count;
+
+  void Increment() {
+    
+  }
 
 
 }

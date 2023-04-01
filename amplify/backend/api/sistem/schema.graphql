@@ -27,3 +27,17 @@ type Inventory @model @auth(rules: [{allow: public}]) {
   stock_last_added: String
   stock_created: String
 }
+
+
+type Post @model {
+  id: ID!
+  title: String!
+  status: PostStatus!
+  rating: Int
+  content: String
+}
+
+enum PostStatus {
+  ACTIVE
+  INACTIVE
+}
