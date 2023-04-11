@@ -4,6 +4,7 @@ import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:sistem/screens/single_inventory.dart';
 import 'package:sistem/theme/app_theme.dart';
 
 class SignupPage extends StatefulWidget {
