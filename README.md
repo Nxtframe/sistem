@@ -1,6 +1,6 @@
-# sistem
+# Sistem
 
-A Flutter Inventory Management project. Initial Stages for Learning Purposes
+A Flutter Inventory Management project. Initial Stages for Academic Purposes as a Project
 
 ## Getting Started
 
