@@ -4,6 +4,8 @@ import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:sistem/screens/all_inventory_folder.dart';
+import 'package:sistem/screens/info_input_screen.dart';
 import 'package:sistem/screens/single_inventory.dart';
 import 'package:sistem/theme/app_theme.dart';
 
@@ -67,7 +69,10 @@ class _SignupPageState extends State<SignupPage> {
         username: _emailController.text.trim(),
         confirmationCode: verificationCode,
       ).then(
-        (value) => Navigator.pop(context),
+        (value) => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const InfoInput()),
+              ),
       );
     } on AuthException catch (e) {
       debugPrint("$e");

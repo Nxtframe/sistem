@@ -20,9 +20,6 @@ class AuthenticatedAmplify extends StatefulWidget {
 
 class _AuthenticatedAmplifyState extends State<AuthenticatedAmplify> {
 
- 
-  
-   bool _isAuthenticated = false;
 
   @override
   void initState() {
@@ -30,20 +27,32 @@ class _AuthenticatedAmplifyState extends State<AuthenticatedAmplify> {
     _checkAuthStatus();
   }
 
-  void _checkAuthStatus() async {
+  Future<bool> _checkAuthStatus() async {
     try {
       // Check if the user is authenticated
       AuthSession authSession = await Amplify.Auth.fetchAuthSession();
-      setState(() {
-        _isAuthenticated = authSession.isSignedIn;
-      });
+      return authSession.isSignedIn;
     } on AmplifyException catch (e) {
       print("Failed to get auth session: ${e.message}");
+       return false;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return _isAuthenticated? widget.children:MaterialApp(home: Scaffold( body:SignInPage()));
+      return FutureBuilder<bool>(
+      future: _checkAuthStatus(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Placeholder();
+        } else if (snapshot.hasError) {
+          return const Text("Error occurred while checking authentication status");
+        } else if (snapshot.data == true) {
+          return widget.children;
+        } else {
+          return const MaterialApp(home: Scaffold(body: SignInPage()));
+        }
+      },
+    );
   }
-}
+  }

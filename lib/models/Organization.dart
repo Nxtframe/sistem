@@ -19,6 +19,7 @@
 
 // ignore_for_file: public_member_api_docs, annotate_overrides, dead_code, dead_codepublic_member_api_docs, depend_on_referenced_packages, file_names, library_private_types_in_public_api, no_leading_underscores_for_library_prefixes, no_leading_underscores_for_local_identifiers, non_constant_identifier_names, null_check_on_nullable_type_parameter, prefer_adjacent_string_concatenation, prefer_const_constructors, prefer_if_null_operators, prefer_interpolation_to_compose_strings, slash_for_doc_comments, sort_child_properties_last, unnecessary_const, unnecessary_constructor_name, unnecessary_late, unnecessary_new, unnecessary_null_aware_assignments, unnecessary_nullable_for_final_variable_declarations, unnecessary_string_interpolations, use_build_context_synchronously
 
+import 'ModelProvider.dart';
 import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/foundation.dart';
 
@@ -30,9 +31,10 @@ class Organization extends Model {
   final String id;
   final String? _organization_name;
   final String? _organization_created;
-  final int? _organization_age;
+  final Employee? _employee;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
+  final String? _organizationEmployeeId;
 
   @override
   getInstanceType() => classType;
@@ -55,8 +57,8 @@ class Organization extends Model {
     return _organization_created;
   }
   
-  int? get organization_age {
-    return _organization_age;
+  Employee? get employee {
+    return _employee;
   }
   
   TemporalDateTime? get createdAt {
@@ -67,14 +69,19 @@ class Organization extends Model {
     return _updatedAt;
   }
   
-  const Organization._internal({required this.id, organization_name, organization_created, organization_age, createdAt, updatedAt}): _organization_name = organization_name, _organization_created = organization_created, _organization_age = organization_age, _createdAt = createdAt, _updatedAt = updatedAt;
+  String? get organizationEmployeeId {
+    return _organizationEmployeeId;
+  }
   
-  factory Organization({String? id, String? organization_name, String? organization_created, int? organization_age}) {
+  const Organization._internal({required this.id, organization_name, organization_created, employee, createdAt, updatedAt, organizationEmployeeId}): _organization_name = organization_name, _organization_created = organization_created, _employee = employee, _createdAt = createdAt, _updatedAt = updatedAt, _organizationEmployeeId = organizationEmployeeId;
+  
+  factory Organization({String? id, String? organization_name, String? organization_created, Employee? employee, String? organizationEmployeeId}) {
     return Organization._internal(
       id: id == null ? UUID.getUUID() : id,
       organization_name: organization_name,
       organization_created: organization_created,
-      organization_age: organization_age);
+      employee: employee,
+      organizationEmployeeId: organizationEmployeeId);
   }
   
   bool equals(Object other) {
@@ -88,7 +95,8 @@ class Organization extends Model {
       id == other.id &&
       _organization_name == other._organization_name &&
       _organization_created == other._organization_created &&
-      _organization_age == other._organization_age;
+      _employee == other._employee &&
+      _organizationEmployeeId == other._organizationEmployeeId;
   }
   
   @override
@@ -102,43 +110,50 @@ class Organization extends Model {
     buffer.write("id=" + "$id" + ", ");
     buffer.write("organization_name=" + "$_organization_name" + ", ");
     buffer.write("organization_created=" + "$_organization_created" + ", ");
-    buffer.write("organization_age=" + (_organization_age != null ? _organization_age!.toString() : "null") + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
-    buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
+    buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null") + ", ");
+    buffer.write("organizationEmployeeId=" + "$_organizationEmployeeId");
     buffer.write("}");
     
     return buffer.toString();
   }
   
-  Organization copyWith({String? organization_name, String? organization_created, int? organization_age}) {
+  Organization copyWith({String? organization_name, String? organization_created, Employee? employee, String? organizationEmployeeId}) {
     return Organization._internal(
       id: id,
       organization_name: organization_name ?? this.organization_name,
       organization_created: organization_created ?? this.organization_created,
-      organization_age: organization_age ?? this.organization_age);
+      employee: employee ?? this.employee,
+      organizationEmployeeId: organizationEmployeeId ?? this.organizationEmployeeId);
   }
   
   Organization.fromJson(Map<String, dynamic> json)  
     : id = json['id'],
       _organization_name = json['organization_name'],
       _organization_created = json['organization_created'],
-      _organization_age = (json['organization_age'] as num?)?.toInt(),
+      _employee = json['employee']?['serializedData'] != null
+        ? Employee.fromJson(new Map<String, dynamic>.from(json['employee']['serializedData']))
+        : null,
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
-      _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
+      _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null,
+      _organizationEmployeeId = json['organizationEmployeeId'];
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'organization_name': _organization_name, 'organization_created': _organization_created, 'organization_age': _organization_age, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'organization_name': _organization_name, 'organization_created': _organization_created, 'employee': _employee?.toJson(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format(), 'organizationEmployeeId': _organizationEmployeeId
   };
   
   Map<String, Object?> toMap() => {
-    'id': id, 'organization_name': _organization_name, 'organization_created': _organization_created, 'organization_age': _organization_age, 'createdAt': _createdAt, 'updatedAt': _updatedAt
+    'id': id, 'organization_name': _organization_name, 'organization_created': _organization_created, 'employee': _employee, 'createdAt': _createdAt, 'updatedAt': _updatedAt, 'organizationEmployeeId': _organizationEmployeeId
   };
 
   static final QueryModelIdentifier<OrganizationModelIdentifier> MODEL_IDENTIFIER = QueryModelIdentifier<OrganizationModelIdentifier>();
   static final QueryField ID = QueryField(fieldName: "id");
   static final QueryField ORGANIZATION_NAME = QueryField(fieldName: "organization_name");
   static final QueryField ORGANIZATION_CREATED = QueryField(fieldName: "organization_created");
-  static final QueryField ORGANIZATION_AGE = QueryField(fieldName: "organization_age");
+  static final QueryField EMPLOYEE = QueryField(
+    fieldName: "employee",
+    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: 'Employee'));
+  static final QueryField ORGANIZATIONEMPLOYEEID = QueryField(fieldName: "organizationEmployeeId");
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Organization";
     modelSchemaDefinition.pluralName = "Organizations";
@@ -146,6 +161,14 @@ class Organization extends Model {
     modelSchemaDefinition.authRules = [
       AuthRule(
         authStrategy: AuthStrategy.PUBLIC,
+        operations: [
+          ModelOperation.CREATE,
+          ModelOperation.UPDATE,
+          ModelOperation.DELETE,
+          ModelOperation.READ
+        ]),
+      AuthRule(
+        authStrategy: AuthStrategy.PRIVATE,
         operations: [
           ModelOperation.CREATE,
           ModelOperation.UPDATE,
@@ -168,10 +191,11 @@ class Organization extends Model {
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
     
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Organization.ORGANIZATION_AGE,
+    modelSchemaDefinition.addField(ModelFieldDefinition.hasOne(
+      key: Organization.EMPLOYEE,
       isRequired: false,
-      ofType: ModelFieldType(ModelFieldTypeEnum.int)
+      ofModelName: 'Employee',
+      associatedKey: Employee.ID
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.nonQueryField(
@@ -186,6 +210,12 @@ class Organization extends Model {
       isRequired: false,
       isReadOnly: true,
       ofType: ModelFieldType(ModelFieldTypeEnum.dateTime)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Organization.ORGANIZATIONEMPLOYEEID,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
   });
 }

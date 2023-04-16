@@ -1,30 +1,37 @@
-type Organization @model @auth(rules: [{allow: public}]) {
+type CategoryOfItems @model @auth(rules: [{allow: public}, {allow: private}]) {
+  id: ID!
+  category_name: String
+  inventories: [Inventory] @hasMany(indexName: "byCategoryOfItems", fields: ["id"])
+}
+
+type Organization @model @auth(rules: [{allow: public}, {allow: private}]) {
   id: ID!
   organization_name: String
   organization_created: String
-  organization_age: Int
+  employee: Employee @hasOne
 }
 
-type Employee @model @auth(rules: [{allow: public}, {allow: owner}]) {
+type Employee @model @auth(rules: [{allow: public}, {allow: owner}, {allow: private}]) {
   id: ID!
   employee_role: String
   employee_organization: String
-  EmployeeToInventory: Inventory @hasOne
   employee_email: AWSEmail
   employee_phone: Int
-  employee_age: Int
   employee_created: String
+  organization_id: ID
 }
 
-type Inventory @model @auth(rules: [{allow: public}]) {
+type Inventory @model @auth(rules: [{allow: public}, {allow: private}]) {
   id: ID!
   stock_name: String!
-  stock_added: String
-  stock_organization: ID
+  stock_organization_id: ID
   stock_no: Int
-  stock_sold: String
-  stock_sold_today: String
-  stock_last_added: String
+  stock_sold: Int
+  stock_sold_today: Int
+  stock_last_added: AWSDate
   stock_created: String
+  stock_category: String
+  category_id: ID! @index(name: "byCategoryOfItems")
+  organization2Inventory: Organization @hasOne
 }
-
+ 

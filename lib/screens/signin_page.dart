@@ -26,7 +26,6 @@ class _SignInPageState extends State<SignInPage> {
         username: email,
         password: password,
       );
-
       setState(() {
         isSignedIn = result.isSignedIn;
       });

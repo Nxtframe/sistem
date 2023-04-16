@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sistem/screens/all_inventory_folder.dart';
 import 'package:sistem/widgets/app_bar.dart';
 import 'package:sistem/widgets/cards.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -122,9 +123,9 @@ class _HomePageState extends State<HomePage> {
                 height: 45,
               ),
               GestureDetector(
-                onTap: () {},
+                onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => AllInventory())),
                 child: const Text(
-                  'Settings',
+                  'Show Inventory',
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.w700,

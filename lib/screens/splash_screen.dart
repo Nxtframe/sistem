@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:sistem/screens/info_input_screen.dart';
 import 'package:sistem/screens/signin_page.dart';
 import 'package:sistem/services/auth/authenticated_aws.dart';
 import 'package:sistem/theme/app_theme.dart';
@@ -21,9 +22,9 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Timer(
-        const Duration(seconds: 1),
+        const Duration(seconds: 3),
         () => Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => AuthenticatedAmplify(children: const SignInPage()))));
+            MaterialPageRoute(builder: (context) =>  const AuthenticatedAmplify(children: InfoInput()))));
   }
 
   @override

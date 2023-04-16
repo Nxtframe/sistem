@@ -19,7 +19,6 @@
 
 // ignore_for_file: public_member_api_docs, annotate_overrides, dead_code, dead_codepublic_member_api_docs, depend_on_referenced_packages, file_names, library_private_types_in_public_api, no_leading_underscores_for_library_prefixes, no_leading_underscores_for_local_identifiers, non_constant_identifier_names, null_check_on_nullable_type_parameter, prefer_adjacent_string_concatenation, prefer_const_constructors, prefer_if_null_operators, prefer_interpolation_to_compose_strings, slash_for_doc_comments, sort_child_properties_last, unnecessary_const, unnecessary_constructor_name, unnecessary_late, unnecessary_new, unnecessary_null_aware_assignments, unnecessary_nullable_for_final_variable_declarations, unnecessary_string_interpolations, use_build_context_synchronously
 
-import 'ModelProvider.dart';
 import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/foundation.dart';
 
@@ -31,14 +30,12 @@ class Employee extends Model {
   final String id;
   final String? _employee_role;
   final String? _employee_organization;
-  final Inventory? _EmployeeToInventory;
   final String? _employee_email;
   final int? _employee_phone;
-  final int? _employee_age;
   final String? _employee_created;
+  final String? _organization_id;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
-  final String? _employeeEmployeeToInventoryId;
 
   @override
   getInstanceType() => classType;
@@ -61,10 +58,6 @@ class Employee extends Model {
     return _employee_organization;
   }
   
-  Inventory? get EmployeeToInventory {
-    return _EmployeeToInventory;
-  }
-  
   String? get employee_email {
     return _employee_email;
   }
@@ -73,12 +66,12 @@ class Employee extends Model {
     return _employee_phone;
   }
   
-  int? get employee_age {
-    return _employee_age;
-  }
-  
   String? get employee_created {
     return _employee_created;
+  }
+  
+  String? get organization_id {
+    return _organization_id;
   }
   
   TemporalDateTime? get createdAt {
@@ -89,23 +82,17 @@ class Employee extends Model {
     return _updatedAt;
   }
   
-  String? get employeeEmployeeToInventoryId {
-    return _employeeEmployeeToInventoryId;
-  }
+  const Employee._internal({required this.id, employee_role, employee_organization, employee_email, employee_phone, employee_created, organization_id, createdAt, updatedAt}): _employee_role = employee_role, _employee_organization = employee_organization, _employee_email = employee_email, _employee_phone = employee_phone, _employee_created = employee_created, _organization_id = organization_id, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  const Employee._internal({required this.id, employee_role, employee_organization, EmployeeToInventory, employee_email, employee_phone, employee_age, employee_created, createdAt, updatedAt, employeeEmployeeToInventoryId}): _employee_role = employee_role, _employee_organization = employee_organization, _EmployeeToInventory = EmployeeToInventory, _employee_email = employee_email, _employee_phone = employee_phone, _employee_age = employee_age, _employee_created = employee_created, _createdAt = createdAt, _updatedAt = updatedAt, _employeeEmployeeToInventoryId = employeeEmployeeToInventoryId;
-  
-  factory Employee({String? id, String? employee_role, String? employee_organization, Inventory? EmployeeToInventory, String? employee_email, int? employee_phone, int? employee_age, String? employee_created, String? employeeEmployeeToInventoryId}) {
+  factory Employee({String? id, String? employee_role, String? employee_organization, String? employee_email, int? employee_phone, String? employee_created, String? organization_id}) {
     return Employee._internal(
       id: id == null ? UUID.getUUID() : id,
       employee_role: employee_role,
       employee_organization: employee_organization,
-      EmployeeToInventory: EmployeeToInventory,
       employee_email: employee_email,
       employee_phone: employee_phone,
-      employee_age: employee_age,
       employee_created: employee_created,
-      employeeEmployeeToInventoryId: employeeEmployeeToInventoryId);
+      organization_id: organization_id);
   }
   
   bool equals(Object other) {
@@ -119,12 +106,10 @@ class Employee extends Model {
       id == other.id &&
       _employee_role == other._employee_role &&
       _employee_organization == other._employee_organization &&
-      _EmployeeToInventory == other._EmployeeToInventory &&
       _employee_email == other._employee_email &&
       _employee_phone == other._employee_phone &&
-      _employee_age == other._employee_age &&
       _employee_created == other._employee_created &&
-      _employeeEmployeeToInventoryId == other._employeeEmployeeToInventoryId;
+      _organization_id == other._organization_id;
   }
   
   @override
@@ -140,64 +125,53 @@ class Employee extends Model {
     buffer.write("employee_organization=" + "$_employee_organization" + ", ");
     buffer.write("employee_email=" + "$_employee_email" + ", ");
     buffer.write("employee_phone=" + (_employee_phone != null ? _employee_phone!.toString() : "null") + ", ");
-    buffer.write("employee_age=" + (_employee_age != null ? _employee_age!.toString() : "null") + ", ");
     buffer.write("employee_created=" + "$_employee_created" + ", ");
+    buffer.write("organization_id=" + "$_organization_id" + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
-    buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null") + ", ");
-    buffer.write("employeeEmployeeToInventoryId=" + "$_employeeEmployeeToInventoryId");
+    buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
     buffer.write("}");
     
     return buffer.toString();
   }
   
-  Employee copyWith({String? employee_role, String? employee_organization, Inventory? EmployeeToInventory, String? employee_email, int? employee_phone, int? employee_age, String? employee_created, String? employeeEmployeeToInventoryId}) {
+  Employee copyWith({String? employee_role, String? employee_organization, String? employee_email, int? employee_phone, String? employee_created, String? organization_id}) {
     return Employee._internal(
       id: id,
       employee_role: employee_role ?? this.employee_role,
       employee_organization: employee_organization ?? this.employee_organization,
-      EmployeeToInventory: EmployeeToInventory ?? this.EmployeeToInventory,
       employee_email: employee_email ?? this.employee_email,
       employee_phone: employee_phone ?? this.employee_phone,
-      employee_age: employee_age ?? this.employee_age,
       employee_created: employee_created ?? this.employee_created,
-      employeeEmployeeToInventoryId: employeeEmployeeToInventoryId ?? this.employeeEmployeeToInventoryId);
+      organization_id: organization_id ?? this.organization_id);
   }
   
   Employee.fromJson(Map<String, dynamic> json)  
     : id = json['id'],
       _employee_role = json['employee_role'],
       _employee_organization = json['employee_organization'],
-      _EmployeeToInventory = json['EmployeeToInventory']?['serializedData'] != null
-        ? Inventory.fromJson(new Map<String, dynamic>.from(json['EmployeeToInventory']['serializedData']))
-        : null,
       _employee_email = json['employee_email'],
       _employee_phone = (json['employee_phone'] as num?)?.toInt(),
-      _employee_age = (json['employee_age'] as num?)?.toInt(),
       _employee_created = json['employee_created'],
+      _organization_id = json['organization_id'],
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
-      _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null,
-      _employeeEmployeeToInventoryId = json['employeeEmployeeToInventoryId'];
+      _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'employee_role': _employee_role, 'employee_organization': _employee_organization, 'EmployeeToInventory': _EmployeeToInventory?.toJson(), 'employee_email': _employee_email, 'employee_phone': _employee_phone, 'employee_age': _employee_age, 'employee_created': _employee_created, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format(), 'employeeEmployeeToInventoryId': _employeeEmployeeToInventoryId
+    'id': id, 'employee_role': _employee_role, 'employee_organization': _employee_organization, 'employee_email': _employee_email, 'employee_phone': _employee_phone, 'employee_created': _employee_created, 'organization_id': _organization_id, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
   
   Map<String, Object?> toMap() => {
-    'id': id, 'employee_role': _employee_role, 'employee_organization': _employee_organization, 'EmployeeToInventory': _EmployeeToInventory, 'employee_email': _employee_email, 'employee_phone': _employee_phone, 'employee_age': _employee_age, 'employee_created': _employee_created, 'createdAt': _createdAt, 'updatedAt': _updatedAt, 'employeeEmployeeToInventoryId': _employeeEmployeeToInventoryId
+    'id': id, 'employee_role': _employee_role, 'employee_organization': _employee_organization, 'employee_email': _employee_email, 'employee_phone': _employee_phone, 'employee_created': _employee_created, 'organization_id': _organization_id, 'createdAt': _createdAt, 'updatedAt': _updatedAt
   };
 
   static final QueryModelIdentifier<EmployeeModelIdentifier> MODEL_IDENTIFIER = QueryModelIdentifier<EmployeeModelIdentifier>();
   static final QueryField ID = QueryField(fieldName: "id");
   static final QueryField EMPLOYEE_ROLE = QueryField(fieldName: "employee_role");
   static final QueryField EMPLOYEE_ORGANIZATION = QueryField(fieldName: "employee_organization");
-  static final QueryField EMPLOYEETOINVENTORY = QueryField(
-    fieldName: "EmployeeToInventory",
-    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: 'Inventory'));
   static final QueryField EMPLOYEE_EMAIL = QueryField(fieldName: "employee_email");
   static final QueryField EMPLOYEE_PHONE = QueryField(fieldName: "employee_phone");
-  static final QueryField EMPLOYEE_AGE = QueryField(fieldName: "employee_age");
   static final QueryField EMPLOYEE_CREATED = QueryField(fieldName: "employee_created");
-  static final QueryField EMPLOYEEEMPLOYEETOINVENTORYID = QueryField(fieldName: "employeeEmployeeToInventoryId");
+  static final QueryField ORGANIZATION_ID = QueryField(fieldName: "organization_id");
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Employee";
     modelSchemaDefinition.pluralName = "Employees";
@@ -221,6 +195,14 @@ class Employee extends Model {
           ModelOperation.UPDATE,
           ModelOperation.DELETE,
           ModelOperation.READ
+        ]),
+      AuthRule(
+        authStrategy: AuthStrategy.PRIVATE,
+        operations: [
+          ModelOperation.CREATE,
+          ModelOperation.UPDATE,
+          ModelOperation.DELETE,
+          ModelOperation.READ
         ])
     ];
     
@@ -238,13 +220,6 @@ class Employee extends Model {
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
     
-    modelSchemaDefinition.addField(ModelFieldDefinition.hasOne(
-      key: Employee.EMPLOYEETOINVENTORY,
-      isRequired: false,
-      ofModelName: 'Inventory',
-      associatedKey: Inventory.ID
-    ));
-    
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
       key: Employee.EMPLOYEE_EMAIL,
       isRequired: false,
@@ -258,13 +233,13 @@ class Employee extends Model {
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Employee.EMPLOYEE_AGE,
+      key: Employee.EMPLOYEE_CREATED,
       isRequired: false,
-      ofType: ModelFieldType(ModelFieldTypeEnum.int)
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Employee.EMPLOYEE_CREATED,
+      key: Employee.ORGANIZATION_ID,
       isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
@@ -281,12 +256,6 @@ class Employee extends Model {
       isRequired: false,
       isReadOnly: true,
       ofType: ModelFieldType(ModelFieldTypeEnum.dateTime)
-    ));
-    
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Employee.EMPLOYEEEMPLOYEETOINVENTORYID,
-      isRequired: false,
-      ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
   });
 }
