@@ -47,11 +47,15 @@ class _MyAppState extends ConsumerState<MyApp> {
       
       final auth = AmplifyAuthCognito();
       final api = AmplifyAPI();
-      final datastorePlugin =
-        AmplifyDataStore(modelProvider: ModelProvider.instance);
-      await Amplify.addPlugins([datastorePlugin, api,auth]);
+      final datastorePlugin = AmplifyDataStore(modelProvider: ModelProvider.instance);
+      
+      if(!Amplify.isConfigured){
+          await Amplify.addPlugins([datastorePlugin, api,auth]);
+          await Amplify.configure(amplifyconfig);
+      }
+      
       // call Amplify.configure to use the initialized categories in your app
-      await Amplify.configure(amplifyconfig);
+      
     } on Exception catch (e) {
       safePrint('An error occurred configuring Amplify: $e');
     }

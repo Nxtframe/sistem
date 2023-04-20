@@ -1,4 +1,7 @@
 import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:sistem/helpers/query_organisation_name.dart';
 import 'package:sistem/models/Employee.dart';
 import 'package:sistem/models/ModelProvider.dart';
 import 'package:uuid/uuid.dart';
@@ -19,23 +22,25 @@ Future _usersEmail() async {
   }
 
 
-Future<void> saveEmployee(String employee_role,String organization_id, int employee_phone) async {
+Future<void> saveEmployee(String employeeRole,String organizationId, int employeePhone) async {
    final now = DateTime.now();
   final formattedDate = '${now.year}-${_addLeadingZero(now.month)}-${_addLeadingZero(now.day)}';
-  
+  final userEmail = await _usersEmail();
   final newEmployee = Employee(
     employee_created: formattedDate,
-    employee_role: employee_role,
-    id: UUID().toString(),
-    organization_id: organization_id,
-    employee_phone: employee_phone,
+    employee_role: employeeRole,
+    id: Uuid().v4(),
+    organizationIDtoEmployeeRelation: organizationId,
+    employee_organization: await queryOrgansationName(organizationId),
+    employee_phone: employeePhone,
+    employee_email: userEmail
   );
 
   await Amplify.DataStore.save(newEmployee);
 }
 
-Future<void> saveManager(String employeeRole,String organizationId, int employeePhone,String organizationName,) async {
-  final orgid = UUID().toString();
+Future<void> saveManager(String employeeRole, int employeePhone,String organizationName,) async {
+  final orgid = Uuid().v4();
    final now = DateTime.now();
   final formattedDate = '${now.year}-${_addLeadingZero(now.month)}-${_addLeadingZero(now.day)}';
   
@@ -44,10 +49,11 @@ Future<void> saveManager(String employeeRole,String organizationId, int employee
   final newManager = Employee(
     employee_created: formattedDate,
     employee_role: employeeRole,
-    id: UUID().toString(),
-    organization_id: orgid,
+    id: Uuid().v4(),
+    employee_organization: organizationName,
     employee_phone: employeePhone,
-    employee_email: userEmail
+    employee_email: userEmail,
+    organizationIDtoEmployeeRelation: orgid
   );
 
   final newOrganisation = Organization(
@@ -57,10 +63,15 @@ Future<void> saveManager(String employeeRole,String organizationId, int employee
   );
   
   try {
-    await Amplify.DataStore.save(newManager);
-    await Amplify.DataStore.save(newOrganisation);
+    bool result = await InternetConnectionChecker().hasConnection;
+
+    if (result != false){
+        await Amplify.DataStore.save(newOrganisation,);
+        await Amplify.DataStore.save(newManager);
+    }
+    
   } catch (e) {
-    Exception(e);
+   throw Exception(e);
   }
   
   

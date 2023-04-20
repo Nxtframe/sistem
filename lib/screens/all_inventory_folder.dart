@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sistem/providers/inventory_provider.dart';
+import 'package:sistem/providers/category_provider.dart';
 import 'package:sistem/screens/items_folder.dart';
 
 class AllInventory extends ConsumerStatefulWidget {
@@ -15,7 +15,7 @@ class _AllInventoryState extends ConsumerState<AllInventory> {
   
   @override
   Widget build(BuildContext context) {
-    final noOfFolders = ref.watch(noOfFoldersProvider);
+    final noOfCategory = ref.watch(noOfCategoryProvider);
     List<String> foldersList = ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5'];
 
     return Scaffold(
@@ -23,21 +23,21 @@ class _AllInventoryState extends ConsumerState<AllInventory> {
         children: [
           Row(
             children: [SizedBox( height: 100,),SizedBox(
-              child: Column(children: [Text('Folders'), Text(noOfFolders.toString(),)],),
+              child: Column(children: [Text('Folders'), Text(noOfCategory.toString(),)],),
             ),
             Row(
             children: [SizedBox( height: 100,),SizedBox(
-              child: Column(children: [Text('Items'), Text(noOfFolders.toString(),)],),
+              child: Column(children: [Text('Items'), Text(noOfCategory.toString(),)],),
             )],
           ),
           Row(
             children: [SizedBox( height: 100,),SizedBox(
-              child: Column(children: [Text('Total City'), Text(noOfFolders.toString(),)],),
+              child: Column(children: [Text('Total City'), Text(noOfCategory.toString(),)],),
             )],
           ),
           Row(
             children: [SizedBox( height: 100,),SizedBox(
-              child: Column(children: [Text('Total Value'), Text(noOfFolders.toString(),)],),
+              child: Column(children: [Text('Total Value'), Text(noOfCategory.toString(),)],),
             )],
           )],
           ),

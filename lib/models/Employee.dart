@@ -33,7 +33,7 @@ class Employee extends Model {
   final String? _employee_email;
   final int? _employee_phone;
   final String? _employee_created;
-  final String? _organization_id;
+  final String? _organizationIDtoEmployeeRelation;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
 
@@ -70,8 +70,8 @@ class Employee extends Model {
     return _employee_created;
   }
   
-  String? get organization_id {
-    return _organization_id;
+  String? get organizationIDtoEmployeeRelation {
+    return _organizationIDtoEmployeeRelation;
   }
   
   TemporalDateTime? get createdAt {
@@ -82,9 +82,9 @@ class Employee extends Model {
     return _updatedAt;
   }
   
-  const Employee._internal({required this.id, employee_role, employee_organization, employee_email, employee_phone, employee_created, organization_id, createdAt, updatedAt}): _employee_role = employee_role, _employee_organization = employee_organization, _employee_email = employee_email, _employee_phone = employee_phone, _employee_created = employee_created, _organization_id = organization_id, _createdAt = createdAt, _updatedAt = updatedAt;
+  const Employee._internal({required this.id, employee_role, employee_organization, employee_email, employee_phone, employee_created, organizationIDtoEmployeeRelation, createdAt, updatedAt}): _employee_role = employee_role, _employee_organization = employee_organization, _employee_email = employee_email, _employee_phone = employee_phone, _employee_created = employee_created, _organizationIDtoEmployeeRelation = organizationIDtoEmployeeRelation, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory Employee({String? id, String? employee_role, String? employee_organization, String? employee_email, int? employee_phone, String? employee_created, String? organization_id}) {
+  factory Employee({String? id, String? employee_role, String? employee_organization, String? employee_email, int? employee_phone, String? employee_created, String? organizationIDtoEmployeeRelation}) {
     return Employee._internal(
       id: id == null ? UUID.getUUID() : id,
       employee_role: employee_role,
@@ -92,7 +92,7 @@ class Employee extends Model {
       employee_email: employee_email,
       employee_phone: employee_phone,
       employee_created: employee_created,
-      organization_id: organization_id);
+      organizationIDtoEmployeeRelation: organizationIDtoEmployeeRelation);
   }
   
   bool equals(Object other) {
@@ -109,7 +109,7 @@ class Employee extends Model {
       _employee_email == other._employee_email &&
       _employee_phone == other._employee_phone &&
       _employee_created == other._employee_created &&
-      _organization_id == other._organization_id;
+      _organizationIDtoEmployeeRelation == other._organizationIDtoEmployeeRelation;
   }
   
   @override
@@ -126,7 +126,7 @@ class Employee extends Model {
     buffer.write("employee_email=" + "$_employee_email" + ", ");
     buffer.write("employee_phone=" + (_employee_phone != null ? _employee_phone!.toString() : "null") + ", ");
     buffer.write("employee_created=" + "$_employee_created" + ", ");
-    buffer.write("organization_id=" + "$_organization_id" + ", ");
+    buffer.write("organizationIDtoEmployeeRelation=" + "$_organizationIDtoEmployeeRelation" + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
     buffer.write("}");
@@ -134,7 +134,7 @@ class Employee extends Model {
     return buffer.toString();
   }
   
-  Employee copyWith({String? employee_role, String? employee_organization, String? employee_email, int? employee_phone, String? employee_created, String? organization_id}) {
+  Employee copyWith({String? employee_role, String? employee_organization, String? employee_email, int? employee_phone, String? employee_created, String? organizationIDtoEmployeeRelation}) {
     return Employee._internal(
       id: id,
       employee_role: employee_role ?? this.employee_role,
@@ -142,7 +142,7 @@ class Employee extends Model {
       employee_email: employee_email ?? this.employee_email,
       employee_phone: employee_phone ?? this.employee_phone,
       employee_created: employee_created ?? this.employee_created,
-      organization_id: organization_id ?? this.organization_id);
+      organizationIDtoEmployeeRelation: organizationIDtoEmployeeRelation ?? this.organizationIDtoEmployeeRelation);
   }
   
   Employee.fromJson(Map<String, dynamic> json)  
@@ -152,16 +152,16 @@ class Employee extends Model {
       _employee_email = json['employee_email'],
       _employee_phone = (json['employee_phone'] as num?)?.toInt(),
       _employee_created = json['employee_created'],
-      _organization_id = json['organization_id'],
+      _organizationIDtoEmployeeRelation = json['organizationIDtoEmployeeRelation'],
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'employee_role': _employee_role, 'employee_organization': _employee_organization, 'employee_email': _employee_email, 'employee_phone': _employee_phone, 'employee_created': _employee_created, 'organization_id': _organization_id, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'employee_role': _employee_role, 'employee_organization': _employee_organization, 'employee_email': _employee_email, 'employee_phone': _employee_phone, 'employee_created': _employee_created, 'organizationIDtoEmployeeRelation': _organizationIDtoEmployeeRelation, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
   
   Map<String, Object?> toMap() => {
-    'id': id, 'employee_role': _employee_role, 'employee_organization': _employee_organization, 'employee_email': _employee_email, 'employee_phone': _employee_phone, 'employee_created': _employee_created, 'organization_id': _organization_id, 'createdAt': _createdAt, 'updatedAt': _updatedAt
+    'id': id, 'employee_role': _employee_role, 'employee_organization': _employee_organization, 'employee_email': _employee_email, 'employee_phone': _employee_phone, 'employee_created': _employee_created, 'organizationIDtoEmployeeRelation': _organizationIDtoEmployeeRelation, 'createdAt': _createdAt, 'updatedAt': _updatedAt
   };
 
   static final QueryModelIdentifier<EmployeeModelIdentifier> MODEL_IDENTIFIER = QueryModelIdentifier<EmployeeModelIdentifier>();
@@ -171,7 +171,7 @@ class Employee extends Model {
   static final QueryField EMPLOYEE_EMAIL = QueryField(fieldName: "employee_email");
   static final QueryField EMPLOYEE_PHONE = QueryField(fieldName: "employee_phone");
   static final QueryField EMPLOYEE_CREATED = QueryField(fieldName: "employee_created");
-  static final QueryField ORGANIZATION_ID = QueryField(fieldName: "organization_id");
+  static final QueryField ORGANIZATIONIDTOEMPLOYEERELATION = QueryField(fieldName: "organizationIDtoEmployeeRelation");
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Employee";
     modelSchemaDefinition.pluralName = "Employees";
@@ -186,17 +186,6 @@ class Employee extends Model {
           ModelOperation.READ
         ]),
       AuthRule(
-        authStrategy: AuthStrategy.OWNER,
-        ownerField: "owner",
-        identityClaim: "cognito:username",
-        provider: AuthRuleProvider.USERPOOLS,
-        operations: [
-          ModelOperation.CREATE,
-          ModelOperation.UPDATE,
-          ModelOperation.DELETE,
-          ModelOperation.READ
-        ]),
-      AuthRule(
         authStrategy: AuthStrategy.PRIVATE,
         operations: [
           ModelOperation.CREATE,
@@ -204,6 +193,10 @@ class Employee extends Model {
           ModelOperation.DELETE,
           ModelOperation.READ
         ])
+    ];
+    
+    modelSchemaDefinition.indexes = [
+      ModelIndex(fields: const ["organizationIDtoEmployeeRelation"], name: "byOrganization")
     ];
     
     modelSchemaDefinition.addField(ModelFieldDefinition.id());
@@ -239,7 +232,7 @@ class Employee extends Model {
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Employee.ORGANIZATION_ID,
+      key: Employee.ORGANIZATIONIDTOEMPLOYEERELATION,
       isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));

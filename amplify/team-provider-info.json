@@ -18,6 +18,9 @@
       "function": {
         "insertusers2dynamo": {},
         "storeData": {}
+      },
+      "api": {
+        "sistem": {}
       }
     }
   }

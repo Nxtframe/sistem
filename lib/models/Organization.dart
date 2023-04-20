@@ -21,6 +21,7 @@
 
 import 'ModelProvider.dart';
 import 'package:amplify_core/amplify_core.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 
 
@@ -31,10 +32,9 @@ class Organization extends Model {
   final String id;
   final String? _organization_name;
   final String? _organization_created;
-  final Employee? _employee;
+  final List<Employee>? _employeetoorganisation;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
-  final String? _organizationEmployeeId;
 
   @override
   getInstanceType() => classType;
@@ -57,8 +57,8 @@ class Organization extends Model {
     return _organization_created;
   }
   
-  Employee? get employee {
-    return _employee;
+  List<Employee>? get employeetoorganisation {
+    return _employeetoorganisation;
   }
   
   TemporalDateTime? get createdAt {
@@ -69,19 +69,14 @@ class Organization extends Model {
     return _updatedAt;
   }
   
-  String? get organizationEmployeeId {
-    return _organizationEmployeeId;
-  }
+  const Organization._internal({required this.id, organization_name, organization_created, employeetoorganisation, createdAt, updatedAt}): _organization_name = organization_name, _organization_created = organization_created, _employeetoorganisation = employeetoorganisation, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  const Organization._internal({required this.id, organization_name, organization_created, employee, createdAt, updatedAt, organizationEmployeeId}): _organization_name = organization_name, _organization_created = organization_created, _employee = employee, _createdAt = createdAt, _updatedAt = updatedAt, _organizationEmployeeId = organizationEmployeeId;
-  
-  factory Organization({String? id, String? organization_name, String? organization_created, Employee? employee, String? organizationEmployeeId}) {
+  factory Organization({String? id, String? organization_name, String? organization_created, List<Employee>? employeetoorganisation}) {
     return Organization._internal(
       id: id == null ? UUID.getUUID() : id,
       organization_name: organization_name,
       organization_created: organization_created,
-      employee: employee,
-      organizationEmployeeId: organizationEmployeeId);
+      employeetoorganisation: employeetoorganisation != null ? List<Employee>.unmodifiable(employeetoorganisation) : employeetoorganisation);
   }
   
   bool equals(Object other) {
@@ -95,8 +90,7 @@ class Organization extends Model {
       id == other.id &&
       _organization_name == other._organization_name &&
       _organization_created == other._organization_created &&
-      _employee == other._employee &&
-      _organizationEmployeeId == other._organizationEmployeeId;
+      DeepCollectionEquality().equals(_employeetoorganisation, other._employeetoorganisation);
   }
   
   @override
@@ -111,49 +105,48 @@ class Organization extends Model {
     buffer.write("organization_name=" + "$_organization_name" + ", ");
     buffer.write("organization_created=" + "$_organization_created" + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
-    buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null") + ", ");
-    buffer.write("organizationEmployeeId=" + "$_organizationEmployeeId");
+    buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
     buffer.write("}");
     
     return buffer.toString();
   }
   
-  Organization copyWith({String? organization_name, String? organization_created, Employee? employee, String? organizationEmployeeId}) {
+  Organization copyWith({String? organization_name, String? organization_created, List<Employee>? employeetoorganisation}) {
     return Organization._internal(
       id: id,
       organization_name: organization_name ?? this.organization_name,
       organization_created: organization_created ?? this.organization_created,
-      employee: employee ?? this.employee,
-      organizationEmployeeId: organizationEmployeeId ?? this.organizationEmployeeId);
+      employeetoorganisation: employeetoorganisation ?? this.employeetoorganisation);
   }
   
   Organization.fromJson(Map<String, dynamic> json)  
     : id = json['id'],
       _organization_name = json['organization_name'],
       _organization_created = json['organization_created'],
-      _employee = json['employee']?['serializedData'] != null
-        ? Employee.fromJson(new Map<String, dynamic>.from(json['employee']['serializedData']))
+      _employeetoorganisation = json['employeetoorganisation'] is List
+        ? (json['employeetoorganisation'] as List)
+          .where((e) => e?['serializedData'] != null)
+          .map((e) => Employee.fromJson(new Map<String, dynamic>.from(e['serializedData'])))
+          .toList()
         : null,
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
-      _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null,
-      _organizationEmployeeId = json['organizationEmployeeId'];
+      _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'organization_name': _organization_name, 'organization_created': _organization_created, 'employee': _employee?.toJson(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format(), 'organizationEmployeeId': _organizationEmployeeId
+    'id': id, 'organization_name': _organization_name, 'organization_created': _organization_created, 'employeetoorganisation': _employeetoorganisation?.map((Employee? e) => e?.toJson()).toList(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
   
   Map<String, Object?> toMap() => {
-    'id': id, 'organization_name': _organization_name, 'organization_created': _organization_created, 'employee': _employee, 'createdAt': _createdAt, 'updatedAt': _updatedAt, 'organizationEmployeeId': _organizationEmployeeId
+    'id': id, 'organization_name': _organization_name, 'organization_created': _organization_created, 'employeetoorganisation': _employeetoorganisation, 'createdAt': _createdAt, 'updatedAt': _updatedAt
   };
 
   static final QueryModelIdentifier<OrganizationModelIdentifier> MODEL_IDENTIFIER = QueryModelIdentifier<OrganizationModelIdentifier>();
   static final QueryField ID = QueryField(fieldName: "id");
   static final QueryField ORGANIZATION_NAME = QueryField(fieldName: "organization_name");
   static final QueryField ORGANIZATION_CREATED = QueryField(fieldName: "organization_created");
-  static final QueryField EMPLOYEE = QueryField(
-    fieldName: "employee",
+  static final QueryField EMPLOYEETOORGANISATION = QueryField(
+    fieldName: "employeetoorganisation",
     fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: 'Employee'));
-  static final QueryField ORGANIZATIONEMPLOYEEID = QueryField(fieldName: "organizationEmployeeId");
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Organization";
     modelSchemaDefinition.pluralName = "Organizations";
@@ -191,11 +184,11 @@ class Organization extends Model {
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
     
-    modelSchemaDefinition.addField(ModelFieldDefinition.hasOne(
-      key: Organization.EMPLOYEE,
-      isRequired: false,
+    modelSchemaDefinition.addField(ModelFieldDefinition.hasMany(
+      key: Organization.EMPLOYEETOORGANISATION,
+      isRequired: true,
       ofModelName: 'Employee',
-      associatedKey: Employee.ID
+      associatedKey: Employee.ORGANIZATIONIDTOEMPLOYEERELATION
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.nonQueryField(
@@ -210,12 +203,6 @@ class Organization extends Model {
       isRequired: false,
       isReadOnly: true,
       ofType: ModelFieldType(ModelFieldTypeEnum.dateTime)
-    ));
-    
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Organization.ORGANIZATIONEMPLOYEEID,
-      isRequired: false,
-      ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
   });
 }
