@@ -8,19 +8,14 @@ import 'package:sistem/screens/signup_page.dart';
 import '../../screens/signin_page.dart';
 
 class AuthenticatedAmplify extends StatefulWidget {
- 
   const AuthenticatedAmplify({super.key, required this.children});
   final Widget children;
-  
+
   @override
   State<AuthenticatedAmplify> createState() => _AuthenticatedAmplifyState();
 }
 
-
-
 class _AuthenticatedAmplifyState extends State<AuthenticatedAmplify> {
-
-
   @override
   void initState() {
     super.initState();
@@ -34,25 +29,29 @@ class _AuthenticatedAmplifyState extends State<AuthenticatedAmplify> {
       return authSession.isSignedIn;
     } on AmplifyException catch (e) {
       print("Failed to get auth session: ${e.message}");
-       return false;
+      return false;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-      return FutureBuilder<bool>(
+    return FutureBuilder<bool>(
       future: _checkAuthStatus(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Placeholder();
+          return const Scaffold(
+              body: Center(child: CircularProgressIndicator()));
         } else if (snapshot.hasError) {
-          return const Text("Error occurred while checking authentication status");
+          return const Text(
+              "Error occurred while checking authentication status");
         } else if (snapshot.data == true) {
           return widget.children;
-        } else {
+        } else if (snapshot.data == false) {
           return const MaterialApp(home: Scaffold(body: SignInPage()));
+        } else {
+          return const MaterialApp(home: Scaffold(body: SignupPage()));
         }
       },
     );
   }
-  }
+}

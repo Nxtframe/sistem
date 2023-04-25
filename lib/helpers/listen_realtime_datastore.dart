@@ -13,7 +13,6 @@ StreamSubscription<QuerySnapshot<CategoryOfItems>>? stream;
 bool _isSynced = false; // Check if Data has been Synced( Move to a State Container )
 
 class listenChanges extends ChangeNotifier {
-
   StreamSubscription<QuerySnapshot<CategoryOfItems>> stream = Amplify.DataStore.observeQuery(CategoryOfItems.classType,
   where: CategoryOfItems.ID.eq(CategoryOfItems())).listen(
     (QuerySnapshot<CategoryOfItems> snapshot){

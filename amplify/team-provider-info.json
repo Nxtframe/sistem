@@ -23,5 +23,23 @@
         "sistem": {}
       }
     }
+  },
+  "devv": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-sistem-devv-190017-authRole",
+      "UnauthRoleArn": "arn:aws:iam::698151473416:role/amplify-sistem-devv-190017-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::698151473416:role/amplify-sistem-devv-190017-authRole",
+      "Region": "ap-northeast-2",
+      "DeploymentBucketName": "amplify-sistem-devv-190017-deployment",
+      "UnauthRoleName": "amplify-sistem-devv-190017-unauthRole",
+      "StackName": "amplify-sistem-devv-190017",
+      "StackId": "arn:aws:cloudformation:ap-northeast-2:698151473416:stack/amplify-sistem-devv-190017/5e2ef6f0-e36d-11ed-88f1-0a6227b9ff00",
+      "AmplifyAppId": "d80ej04gvs773"
+    },
+    "categories": {
+      "auth": {
+        "sistem9d5761b3": {}
+      }
+    }
   }
 }

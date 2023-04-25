@@ -171,7 +171,7 @@ class CategoryOfItems extends Model {
       key: CategoryOfItems.INVENTORIES,
       isRequired: false,
       ofModelName: 'Inventory',
-      associatedKey: Inventory.CATEGORY_ID
+      associatedKey: Inventory.CATEGORYOFITEMSID
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.nonQueryField(

@@ -2,30 +2,17 @@ import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:sistem/helpers/query_organisation_name.dart';
+import 'package:sistem/helpers/userData.dart';
 import 'package:sistem/models/Employee.dart';
 import 'package:sistem/models/ModelProvider.dart';
 import 'package:uuid/uuid.dart';
 
 
-Future _usersEmail() async {
-    try {
-      var attributes = (await Amplify.Auth.fetchUserAttributes()).toList();
-      for (var attribute in attributes) {
-        if (attribute.userAttributeKey.toString() == 'email') {
-          return attribute.value.toString();
-        }
-      }
-      return 'no email';
-    } on AuthException catch (e) {
-      return '${e.message}';
-    }
-  }
-
 
 Future<void> saveEmployee(String employeeRole,String organizationId, int employeePhone) async {
    final now = DateTime.now();
   final formattedDate = '${now.year}-${_addLeadingZero(now.month)}-${_addLeadingZero(now.day)}';
-  final userEmail = await _usersEmail();
+  final userEmail = await usersEmail();
   final newEmployee = Employee(
     employee_created: formattedDate,
     employee_role: employeeRole,
@@ -44,7 +31,7 @@ Future<void> saveManager(String employeeRole, int employeePhone,String organizat
    final now = DateTime.now();
   final formattedDate = '${now.year}-${_addLeadingZero(now.month)}-${_addLeadingZero(now.day)}';
   
-   final userEmail = await _usersEmail();
+   final userEmail = await usersEmail();
 
   final newManager = Employee(
     employee_created: formattedDate,

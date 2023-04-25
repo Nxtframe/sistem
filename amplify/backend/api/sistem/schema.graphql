@@ -31,7 +31,7 @@ type Inventory @model @auth(rules: [{allow: public}, {allow: private}]) {
   stock_last_added: AWSDate
   stock_created: String
   stock_category: String
-  category_id: ID! @index(name: "byCategoryOfItems")
   organization2Inventory: Organization @hasOne
+  categoryofitemsID: ID! @index(name: "byCategoryOfItems")
 }
  

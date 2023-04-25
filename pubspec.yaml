@@ -52,6 +52,8 @@ dependencies:
   amplify_datastore: ^0.6.13
   connectivity_plus: ^3.0.4
   internet_connection_checker: ^1.0.0+1
+  shared_preferences: ^2.1.0
+  amplify_core: ^0.6.13
   
 dev_dependencies:
   flutter_test:

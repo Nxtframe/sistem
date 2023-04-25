@@ -5,10 +5,12 @@ import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:sistem/screens/all_inventory_folder.dart';
+import 'package:sistem/screens/confirmation_code.dart';
 import 'package:sistem/screens/info_input_screen.dart';
 import 'package:sistem/screens/single_inventory.dart';
 import 'package:sistem/theme/app_theme.dart';
 
+//Refactor this, 30 days cant read
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
 
@@ -24,7 +26,7 @@ class _SignupPageState extends State<SignupPage> {
   late bool isSignUpComplete = false;
   late bool _confirmCodeFailed = false;
   late bool _isLoading;
-  late String? _errorMessage;
+  late String? _errorMessage = '';
 
   final appTheme = AppTheme();
 
@@ -47,46 +49,35 @@ class _SignupPageState extends State<SignupPage> {
         //Send additional attributes here
         CognitoUserAttributeKey.preferredUsername: username,
       };
-      SignUpResult res = await Amplify.Auth.signUp(
-          username: email, //username = email because Email Sign up
-          password: password,
-          options: CognitoSignUpOptions(userAttributes: userAttributes));
-
-      setState(() {
-        _isLoading = true;
-        _errorMessage = null;
-        isSignUpComplete = res.isSignUpComplete;
-      });
-      if (res.isSignUpComplete) {
-        debugPrint('Sign up is done. ${res.isSignUpComplete}');
+      try {
+        SignUpResult res = await Amplify.Auth.signUp(
+            username: email, //username = email because Email Sign up
+            password: password,
+            options: CognitoSignUpOptions(
+              userAttributes: userAttributes,
+            ));
+        // ignore: use_build_context_synchronously
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ConfirmationCode(
+                    email: _emailController.text,
+                    password: _passwordController.text)));
+      } on AmplifyException catch (e) {
+        setState(() {
+          _errorMessage = 'User already exists';
+        });
       }
-    }
-  }
-
-  void _verifyCode(String verificationCode) async {
-    try {
-      await Amplify.Auth.confirmSignUp(
-        username: _emailController.text.trim(),
-        confirmationCode: verificationCode,
-      ).then(
-        (value) => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const InfoInput()),
-              ),
-      );
-    } on AuthException catch (e) {
-      debugPrint("$e");
-      _emailController.clear();
-      _confirmCodeFailed = true;
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       backgroundColor: Colors.white,
-      resizeToAvoidBottomInset: false,
       body: SingleChildScrollView(
+        reverse: true,
         child: Container(
           // decoration: const BoxDecoration(color: Colors.white),
           child: Form(
@@ -129,7 +120,7 @@ class _SignupPageState extends State<SignupPage> {
                 ),
                 ElevatedButton(
                   child: const Text('Signup'),
-                  onPressed: () async {
+                  onPressed: () {
                     {
                       final username = _userController.text;
                       final password = _passwordController.text;
@@ -141,44 +132,15 @@ class _SignupPageState extends State<SignupPage> {
                             'One of the fields is empty. Not ready to submit.');
                       } else {
                         _signUpUser(
-                                username: username,
-                                password: password,
-                                email: email)
-                            .then((value) => showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                        title: const Text('Confirm the user'),
-                                        content: Column(children: [
-                                          TextFormField(
-                                            controller:
-                                                _activationCodeController,
-                                            decoration: const InputDecoration(
-                                                hintText: "Confirmation Code"),
-                                          ),
-                                          Column(
-                                            children: [
-                                              ElevatedButton(
-                                                  onPressed: () {
-                                                    _verifyCode(
-                                                        _activationCodeController
-                                                            .text);
-                                                  },
-                                                  child: const Text("Confirm")),
-                                              _confirmCodeFailed
-                                                  ? const Text(
-                                                      "Confirmation Code Wrong")
-                                                  : const SizedBox.shrink()
-                                            ],
-                                          )
-                                        ]));
-                                  },
-                                ));
+                            username: username,
+                            password: password,
+                            email: email);
                       }
                     }
                     ;
                   },
-                )
+                ),
+                Text(_errorMessage!.isNotEmpty ? _errorMessage! : '')
               ],
             ),
           ),

@@ -1,23 +1,24 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:http/http.dart' as http;
-import 'package:sistem/models/ModelProvider.dart';
 
-final noOfCategoryProvider = StreamProvider.autoDispose<int>((ref) {
-  int noOfCategory = 0;
+import '../models/CategoryOfItems.dart';
 
-  StreamController<int> controller = StreamController<int>();
+final categoryListProvider =
+    StreamProvider.autoDispose<List<CategoryOfItems>>((ref) {
+  List<CategoryOfItems> categoryList = [];
+
+  StreamController<List<CategoryOfItems>> controller =
+      StreamController<List<CategoryOfItems>>();
 
   // Listen to changes to the CategoryOfItems data model in the Amplify DataStore
   StreamSubscription<QuerySnapshot<CategoryOfItems>> subscription =
       Amplify.DataStore.observeQuery(CategoryOfItems.classType).listen((event) {
-    // When a change occurs, update the noOfCategory value
-    noOfCategory = event.items.length;
-    // Emit the updated value to the controller
-    controller.add(noOfCategory);
+    // When a change occurs, update the categoryList
+    categoryList = event.items;
+    // Emit the updated categoryList to the controller
+    controller.add(categoryList);
   });
 
   ref.onDispose(() {

@@ -70,7 +70,6 @@ class _MyAppState extends ConsumerState<MyApp> {
       title: 'SISTEM',
       theme: LightTheme,
       darkTheme: DarkTheme,
-
       themeMode: _themeManager.themeMode,
       initialRoute: '/',
       routes: {
@@ -78,7 +77,7 @@ class _MyAppState extends ConsumerState<MyApp> {
         'signIn': (context) => SignInPage(),
         'homepage': (context) {
     final signedIn = ref.watch(signInorNot);
-    if (signedIn == true) {
+    if (signedIn == false) {
       return HomePage();
     } else {
       return SignInPage();
