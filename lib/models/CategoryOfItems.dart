@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_literals_to_create_immutables
+
 /*
 * Copyright 2021 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 *
@@ -24,180 +26,243 @@ import 'package:amplify_core/amplify_core.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 
-
 /** This is an auto generated class representing the CategoryOfItems type in your schema. */
 @immutable
 class CategoryOfItems extends Model {
   static const classType = const _CategoryOfItemsModelType();
   final String id;
   final String? _category_name;
-  final List<Inventory>? _inventories;
+  final String? _organizationID;
+  final List<Inventory>? _Inventories;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
 
   @override
   getInstanceType() => classType;
-  
-  @Deprecated('[getId] is being deprecated in favor of custom primary key feature. Use getter [modelIdentifier] to get model identifier.')
+
+  @Deprecated(
+      '[getId] is being deprecated in favor of custom primary key feature. Use getter [modelIdentifier] to get model identifier.')
   @override
   String getId() => id;
-  
+
   CategoryOfItemsModelIdentifier get modelIdentifier {
-      return CategoryOfItemsModelIdentifier(
-        id: id
-      );
+    return CategoryOfItemsModelIdentifier(id: id);
   }
-  
+
   String? get category_name {
     return _category_name;
   }
-  
-  List<Inventory>? get inventories {
-    return _inventories;
+
+  String get organizationID {
+    try {
+      return _organizationID!;
+    } catch (e) {
+      throw new AmplifyCodeGenModelException(
+          AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion: AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString());
+    }
   }
-  
+
+  List<Inventory>? get Inventories {
+    return _Inventories;
+  }
+
   TemporalDateTime? get createdAt {
     return _createdAt;
   }
-  
+
   TemporalDateTime? get updatedAt {
     return _updatedAt;
   }
-  
-  const CategoryOfItems._internal({required this.id, category_name, inventories, createdAt, updatedAt}): _category_name = category_name, _inventories = inventories, _createdAt = createdAt, _updatedAt = updatedAt;
-  
-  factory CategoryOfItems({String? id, String? category_name, List<Inventory>? inventories}) {
+
+  const CategoryOfItems._internal(
+      {required this.id,
+      category_name,
+      required organizationID,
+      Inventories,
+      createdAt,
+      updatedAt})
+      : _category_name = category_name,
+        _organizationID = organizationID,
+        _Inventories = Inventories,
+        _createdAt = createdAt,
+        _updatedAt = updatedAt;
+
+  factory CategoryOfItems(
+      {String? id,
+      String? category_name,
+      required String organizationID,
+      List<Inventory>? Inventories}) {
     return CategoryOfItems._internal(
-      id: id == null ? UUID.getUUID() : id,
-      category_name: category_name,
-      inventories: inventories != null ? List<Inventory>.unmodifiable(inventories) : inventories);
+        id: id == null ? UUID.getUUID() : id,
+        category_name: category_name,
+        organizationID: organizationID,
+        Inventories: Inventories != null
+            ? List<Inventory>.unmodifiable(Inventories)
+            : Inventories);
   }
-  
+
   bool equals(Object other) {
     return this == other;
   }
-  
+
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
     return other is CategoryOfItems &&
-      id == other.id &&
-      _category_name == other._category_name &&
-      DeepCollectionEquality().equals(_inventories, other._inventories);
+        id == other.id &&
+        _category_name == other._category_name &&
+        _organizationID == other._organizationID &&
+        DeepCollectionEquality().equals(_Inventories, other._Inventories);
   }
-  
+
   @override
   int get hashCode => toString().hashCode;
-  
+
   @override
   String toString() {
     var buffer = new StringBuffer();
-    
+
     buffer.write("CategoryOfItems {");
     buffer.write("id=" + "$id" + ", ");
     buffer.write("category_name=" + "$_category_name" + ", ");
-    buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
-    buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
+    buffer.write("organizationID=" + "$_organizationID" + ", ");
+    buffer.write("createdAt=" +
+        (_createdAt != null ? _createdAt!.format() : "null") +
+        ", ");
+    buffer.write(
+        "updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
     buffer.write("}");
-    
+
     return buffer.toString();
   }
-  
-  CategoryOfItems copyWith({String? category_name, List<Inventory>? inventories}) {
-    return CategoryOfItems._internal(
-      id: id,
-      category_name: category_name ?? this.category_name,
-      inventories: inventories ?? this.inventories);
-  }
-  
-  CategoryOfItems.fromJson(Map<String, dynamic> json)  
-    : id = json['id'],
-      _category_name = json['category_name'],
-      _inventories = json['inventories'] is List
-        ? (json['inventories'] as List)
-          .where((e) => e?['serializedData'] != null)
-          .map((e) => Inventory.fromJson(new Map<String, dynamic>.from(e['serializedData'])))
-          .toList()
-        : null,
-      _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
-      _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
-  
-  Map<String, dynamic> toJson() => {
-    'id': id, 'category_name': _category_name, 'inventories': _inventories?.map((Inventory? e) => e?.toJson()).toList(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
-  };
-  
-  Map<String, Object?> toMap() => {
-    'id': id, 'category_name': _category_name, 'inventories': _inventories, 'createdAt': _createdAt, 'updatedAt': _updatedAt
-  };
 
-  static final QueryModelIdentifier<CategoryOfItemsModelIdentifier> MODEL_IDENTIFIER = QueryModelIdentifier<CategoryOfItemsModelIdentifier>();
+  CategoryOfItems copyWith(
+      {String? category_name,
+      String? organizationID,
+      List<Inventory>? Inventories}) {
+    return CategoryOfItems._internal(
+        id: id,
+        category_name: category_name ?? this.category_name,
+        organizationID: organizationID ?? this.organizationID,
+        Inventories: Inventories ?? this.Inventories);
+  }
+
+  CategoryOfItems.fromJson(Map<String, dynamic> json)
+      : id = json['id'],
+        _category_name = json['category_name'],
+        _organizationID = json['organizationID'],
+        _Inventories = json['Inventories'] is List
+            ? (json['Inventories'] as List)
+                .where((e) => e?['serializedData'] != null)
+                .map((e) => Inventory.fromJson(
+                    new Map<String, dynamic>.from(e['serializedData'])))
+                .toList()
+            : null,
+        _createdAt = json['createdAt'] != null
+            ? TemporalDateTime.fromString(json['createdAt'])
+            : null,
+        _updatedAt = json['updatedAt'] != null
+            ? TemporalDateTime.fromString(json['updatedAt'])
+            : null;
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'category_name': _category_name,
+        'organizationID': _organizationID,
+        'Inventories':
+            _Inventories?.map((Inventory? e) => e?.toJson()).toList(),
+        'createdAt': _createdAt?.format(),
+        'updatedAt': _updatedAt?.format()
+      };
+
+  Map<String, Object?> toMap() => {
+        'id': id,
+        'category_name': _category_name,
+        'organizationID': _organizationID,
+        'Inventories': _Inventories,
+        'createdAt': _createdAt,
+        'updatedAt': _updatedAt
+      };
+
+  static final QueryModelIdentifier<CategoryOfItemsModelIdentifier>
+      MODEL_IDENTIFIER = QueryModelIdentifier<CategoryOfItemsModelIdentifier>();
   static final QueryField ID = QueryField(fieldName: "id");
-  static final QueryField CATEGORY_NAME = QueryField(fieldName: "category_name");
+  static final QueryField CATEGORY_NAME =
+      QueryField(fieldName: "category_name");
+  static final QueryField ORGANIZATIONID =
+      QueryField(fieldName: "organizationID");
   static final QueryField INVENTORIES = QueryField(
-    fieldName: "inventories",
-    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: 'Inventory'));
-  static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
+      fieldName: "Inventories",
+      fieldType:
+          ModelFieldType(ModelFieldTypeEnum.model, ofModelName: 'Inventory'));
+  static var schema =
+      Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "CategoryOfItems";
     modelSchemaDefinition.pluralName = "CategoryOfItems";
-    
+
     modelSchemaDefinition.authRules = [
-      AuthRule(
-        authStrategy: AuthStrategy.PUBLIC,
-        operations: [
-          ModelOperation.CREATE,
-          ModelOperation.UPDATE,
-          ModelOperation.DELETE,
-          ModelOperation.READ
-        ]),
-      AuthRule(
-        authStrategy: AuthStrategy.PRIVATE,
-        operations: [
-          ModelOperation.CREATE,
-          ModelOperation.UPDATE,
-          ModelOperation.DELETE,
-          ModelOperation.READ
-        ])
+      AuthRule(authStrategy: AuthStrategy.PUBLIC, operations: [
+        ModelOperation.CREATE,
+        ModelOperation.UPDATE,
+        ModelOperation.DELETE,
+        ModelOperation.READ
+      ]),
+      AuthRule(authStrategy: AuthStrategy.PRIVATE, operations: [
+        ModelOperation.CREATE,
+        ModelOperation.UPDATE,
+        ModelOperation.DELETE,
+        ModelOperation.READ
+      ])
     ];
-    
+
+    modelSchemaDefinition.indexes = [
+      ModelIndex(fields: const ["organizationID"], name: "byOrganization")
+    ];
+
     modelSchemaDefinition.addField(ModelFieldDefinition.id());
-    
+
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: CategoryOfItems.CATEGORY_NAME,
-      isRequired: false,
-      ofType: ModelFieldType(ModelFieldTypeEnum.string)
-    ));
-    
+        key: CategoryOfItems.CATEGORY_NAME,
+        isRequired: false,
+        ofType: ModelFieldType(ModelFieldTypeEnum.string)));
+
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+        key: CategoryOfItems.ORGANIZATIONID,
+        isRequired: true,
+        ofType: ModelFieldType(ModelFieldTypeEnum.string)));
+
     modelSchemaDefinition.addField(ModelFieldDefinition.hasMany(
-      key: CategoryOfItems.INVENTORIES,
-      isRequired: false,
-      ofModelName: 'Inventory',
-      associatedKey: Inventory.CATEGORYOFITEMSID
-    ));
-    
+        key: CategoryOfItems.INVENTORIES,
+        isRequired: false,
+        ofModelName: 'Inventory',
+        associatedKey: Inventory.CATEGORYOFITEMSID));
+
     modelSchemaDefinition.addField(ModelFieldDefinition.nonQueryField(
-      fieldName: 'createdAt',
-      isRequired: false,
-      isReadOnly: true,
-      ofType: ModelFieldType(ModelFieldTypeEnum.dateTime)
-    ));
-    
+        fieldName: 'createdAt',
+        isRequired: false,
+        isReadOnly: true,
+        ofType: ModelFieldType(ModelFieldTypeEnum.dateTime)));
+
     modelSchemaDefinition.addField(ModelFieldDefinition.nonQueryField(
-      fieldName: 'updatedAt',
-      isRequired: false,
-      isReadOnly: true,
-      ofType: ModelFieldType(ModelFieldTypeEnum.dateTime)
-    ));
+        fieldName: 'updatedAt',
+        isRequired: false,
+        isReadOnly: true,
+        ofType: ModelFieldType(ModelFieldTypeEnum.dateTime)));
   });
 }
 
 class _CategoryOfItemsModelType extends ModelType<CategoryOfItems> {
   const _CategoryOfItemsModelType();
-  
+
   @override
   CategoryOfItems fromJson(Map<String, dynamic> jsonData) {
     return CategoryOfItems.fromJson(jsonData);
   }
-  
+
   @override
   String modelName() {
     return 'CategoryOfItems';
@@ -209,41 +274,37 @@ class _CategoryOfItemsModelType extends ModelType<CategoryOfItems> {
  * of [CategoryOfItems] in your schema.
  */
 @immutable
-class CategoryOfItemsModelIdentifier implements ModelIdentifier<CategoryOfItems> {
+class CategoryOfItemsModelIdentifier
+    implements ModelIdentifier<CategoryOfItems> {
   final String id;
 
   /** Create an instance of CategoryOfItemsModelIdentifier using [id] the primary key. */
-  const CategoryOfItemsModelIdentifier({
-    required this.id});
-  
+  const CategoryOfItemsModelIdentifier({required this.id});
+
   @override
-  Map<String, dynamic> serializeAsMap() => (<String, dynamic>{
-    'id': id
-  });
-  
+  Map<String, dynamic> serializeAsMap() => (<String, dynamic>{'id': id});
+
   @override
   List<Map<String, dynamic>> serializeAsList() => serializeAsMap()
-    .entries
-    .map((entry) => (<String, dynamic>{ entry.key: entry.value }))
-    .toList();
-  
+      .entries
+      .map((entry) => (<String, dynamic>{entry.key: entry.value}))
+      .toList();
+
   @override
   String serializeAsString() => serializeAsMap().values.join('#');
-  
+
   @override
   String toString() => 'CategoryOfItemsModelIdentifier(id: $id)';
-  
+
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) {
       return true;
     }
-    
-    return other is CategoryOfItemsModelIdentifier &&
-      id == other.id;
+
+    return other is CategoryOfItemsModelIdentifier && id == other.id;
   }
-  
+
   @override
-  int get hashCode =>
-    id.hashCode;
+  int get hashCode => id.hashCode;
 }

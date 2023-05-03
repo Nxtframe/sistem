@@ -1,7 +1,17 @@
+type StockTransaction @model @auth(rules: [{allow: private}]) {
+  id: ID!
+  date: AWSDate
+  quantity: Int
+  notes: String
+  Inventories: [Inventory] @manyToMany(relationName: "StockTransactionInventory")
+  organizationID: ID! @index(name: "byOrganization")
+}
+
 type CategoryOfItems @model @auth(rules: [{allow: public}, {allow: private}]) {
   id: ID!
   category_name: String
-  inventories: [Inventory] @hasMany(indexName: "byCategoryOfItems", fields: ["id"])
+  organizationID: ID! @index(name: "byOrganization")
+  Inventories: [Inventory] @hasMany(indexName: "byCategoryOfItems", fields: ["id"])
 }
 
 type Organization @model @auth(rules: [{allow: public}, {allow: private}]) {
@@ -9,6 +19,9 @@ type Organization @model @auth(rules: [{allow: public}, {allow: private}]) {
   organization_name: String
   organization_created: String
   employeetoorganisation: [Employee!] @hasMany(indexName: "byOrganization", fields: ["id"])
+  iventorytorelationship: [Inventory] @hasMany(indexName: "byOrganization", fields: ["id"])
+  category2organisation: [CategoryOfItems] @hasMany(indexName: "byOrganization", fields: ["id"])
+  StockTransactions: [StockTransaction] @hasMany(indexName: "byOrganization", fields: ["id"])
 }
 
 type Employee @model @auth(rules: [{allow: public}, {allow: private}]) {
@@ -24,14 +37,14 @@ type Employee @model @auth(rules: [{allow: public}, {allow: private}]) {
 type Inventory @model @auth(rules: [{allow: public}, {allow: private}]) {
   id: ID!
   stock_name: String!
-  stock_organization_id: ID
-  stock_no: Int
+  stock_price: Float
   stock_sold: Int
   stock_sold_today: Int
   stock_last_added: AWSDate
   stock_created: String
-  stock_category: String
-  organization2Inventory: Organization @hasOne
+  organizationID: ID! @index(name: "byOrganization")
   categoryofitemsID: ID! @index(name: "byCategoryOfItems")
+  stock_no: Int
+  stocktransactions: [StockTransaction] @manyToMany(relationName: "StockTransactionInventory")
 }
  

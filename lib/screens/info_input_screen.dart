@@ -1,14 +1,10 @@
-import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
-import 'package:amplify_authenticator/amplify_authenticator.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistem/helpers/create_emp_and_organisation.dart';
 import 'package:sistem/helpers/isRegisteredSP.dart';
 import 'package:sistem/helpers/query_database_exists.dart';
 import 'package:sistem/screens/homepage.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../widgets/error_screen.dart';
 
 class InfoInput extends ConsumerStatefulWidget {
@@ -87,7 +83,7 @@ class _InfoInputState extends ConsumerState<InfoInput> {
                             await Amplify.Auth.signOut(),
                             Navigator.pushReplacementNamed(context, '/')
                           },
-                      child: Text('Logout'))
+                      child: const Text('Logout'))
                 ],
               ),
             ),

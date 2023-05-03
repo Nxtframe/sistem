@@ -1,23 +1,29 @@
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sistem/helpers/isRegisteredSP.dart';
+import 'package:sistem/providers/profile_info.dart';
 import 'package:sistem/screens/add_category.dart';
 import 'package:sistem/screens/add_inventory.dart';
-import 'package:sistem/screens/all_inventory_folder.dart';
+import 'package:sistem/screens/all_category_folder.dart';
+import 'package:sistem/screens/all_inventory.dart';
 import 'package:sistem/screens/signin_page.dart';
 import 'package:sistem/widgets/app_bar.dart';
 import 'package:sistem/widgets/cards.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
+import '../providers/inventory_list_provider.dart';
+
 //Refactor Everything into their Seperate Widgets
 
-class HomePage extends StatefulWidget {
+class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends ConsumerState<HomePage> {
   late TooltipBehavior _tooltipBehavior;
 
   @override
@@ -28,6 +34,10 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final infoUser = ref.watch(userInfo).value ?? 'user';
+    final avaliableItems = ref.watch(inventoryListProvider).value ?? [];
+    final totalAvaliable = avaliableItems.length;
+
     return Scaffold(
       appBar: AppBarWidget(),
       body: SingleChildScrollView(
@@ -38,36 +48,22 @@ class _HomePageState extends State<HomePage> {
           Row(
             mainAxisAlignment: MainAxisAlignment
                 .spaceAround, //2 Rows for the 4 cards - First Row.
-            children: const [
-              CardWidget(
+            children: [
+              const CardWidget(
                 cardBgColor: 0xFF8A0AC5,
                 businessMetric: "Today Sales",
-                quantity: 2442,
+                quantity: 0, //Take a List of ???? idk
               ),
               CardWidget(
-                businessMetric: "Pending Order",
-                quantity: 55,
-              )
+                cardBgColor: 0xFF0015FF,
+                businessMetric: "Stock Avaliable",
+                quantity: totalAvaliable, //Take All the Inventory from provider
+              ),
             ],
           ),
           const SizedBox(
             height: 20,
           ),
-          Row(
-              mainAxisAlignment: MainAxisAlignment
-                  .spaceAround, //2 Rows for the 4 cards - Second Row.
-              children: const [
-                CardWidget(
-                  cardBgColor: 0xFF0015FF,
-                  businessMetric: "Stock Avaliable",
-                  quantity: 43,
-                ),
-                CardWidget(
-                  cardBgColor: 0xFFF50606,
-                  businessMetric: "Today Orders",
-                  quantity: 5,
-                ),
-              ]),
           const SizedBox(
             height: 20,
           ),
@@ -87,7 +83,7 @@ class _HomePageState extends State<HomePage> {
               series: <LineSeries<SalesData, String>>[
                 LineSeries<SalesData, String>(
                     name: "Sales",
-                    dataSource: <SalesData>[
+                    dataSource: [
                       SalesData('6 AM', 35),
                       SalesData('9 AM', 28),
                       SalesData('12 PM', 34),
@@ -130,21 +126,6 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(
                 height: 45,
               ),
-              GestureDetector(
-                onTap: () => Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => AllInventory())),
-                child: const Text(
-                  'Show Inventory',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w700,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              const SizedBox(
-                height: 45,
-              ),
               const Text(
                 'About',
                 style: TextStyle(
@@ -159,6 +140,7 @@ class _HomePageState extends State<HomePage> {
               GestureDetector(
                 onTap: () async => {
                   await Amplify.Auth.signOut(),
+                  await isRegisteredSPDestroy(),
                   Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
@@ -196,29 +178,31 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       drawer: Drawer(
-        backgroundColor: Color.fromARGB(255, 241, 239, 247),
+        //Left Side
+        backgroundColor: const Color.fromARGB(255, 241, 239, 247),
         child: ListView(
           // Important: Remove any padding from the ListView.
           padding: EdgeInsets.zero,
           children: [
             DrawerHeader(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Color(0x33EEF0F4),
               ),
               child: Column(children: [
-                Container(
-                  height: 80,
-                  width: MediaQuery.of(context).size.width,
-                  child: CircleAvatar(
-                      backgroundImage:
-                          NetworkImage("https://i.stack.imgur.com/x8PhM.png")),
+                GestureDetector(
+                  child: SizedBox(
+                    height: 80,
+                    width: MediaQuery.of(context).size.width,
+                    child: const CircleAvatar(
+                        backgroundImage: NetworkImage(
+                            "https://i.stack.imgur.com/x8PhM.png")),
+                  ),
                 ),
-                Text("Person Name"),
-                Text("Email ID and Switch to Other Account")
+                Text(infoUser),
               ]),
             ),
             ListTile(
-              leading: Icon(
+              leading: const Icon(
                 Icons.home,
               ),
               title: const Text('Dashboard'),
@@ -227,26 +211,43 @@ class _HomePageState extends State<HomePage> {
               },
             ),
             ListTile(
-              leading: Icon(
+              leading: const Icon(
                 Icons.train,
               ),
-              title: const Text('Inventory'),
+              title: const Text('Show Category'),
               onTap: () {
-                Navigator.pop(context);
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const AllInventory()));
               },
             ),
             ListTile(
-              leading: Icon(
+              leading: const Icon(
+                Icons.train,
+              ),
+              title: const Text('Show Inventory'),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const InventoryOnly()));
+              },
+            ),
+            ListTile(
+              leading: const Icon(
                 Icons.account_circle,
               ),
               title: const Text('Add Category'),
               onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => AddCategory()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const AddCategory()));
               },
             ),
             ListTile(
-              leading: Icon(
+              leading: const Icon(
                 Icons.account_circle,
               ),
               title: const Text('Add Inventory'),
@@ -258,37 +259,28 @@ class _HomePageState extends State<HomePage> {
               },
             ),
             ListTile(
-              leading: Icon(
+              leading: const Icon(
                 Icons.account_circle,
               ),
-              title: const Text('Customers'),
+              title: const Text('Update Inventory'),
               onTap: () {
                 Navigator.pop(context);
               },
             ),
             ListTile(
-              leading: Icon(
+              leading: const Icon(
                 Icons.scale_sharp,
               ),
-              title: const Text('Sales'),
+              title: const Text('Total Sales(not done)'),
               onTap: () {
                 Navigator.pop(context);
               },
             ),
             ListTile(
-              leading: Icon(
-                Icons.photo_camera_back_sharp,
-              ),
-              title: const Text('Packages'),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              leading: Icon(
+              leading: const Icon(
                 Icons.inbox,
               ),
-              title: const Text('Invoices'),
+              title: const Text('Invoices(not done)'),
               onTap: () {
                 Navigator.pop(context);
               },

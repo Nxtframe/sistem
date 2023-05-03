@@ -1,13 +1,8 @@
-import 'dart:async';
-
-import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sistem/models/CategoryOfItems.dart';
 import 'package:sistem/providers/category_provider.dart';
-import 'package:sistem/screens/items_folder.dart';
+import 'package:sistem/screens/show_item_in_category.dart';
 
-import '../models/Inventory.dart';
 import '../providers/category_information.dart';
 
 class AllInventory extends ConsumerStatefulWidget {
@@ -18,24 +13,8 @@ class AllInventory extends ConsumerStatefulWidget {
 }
 
 class _AllInventoryState extends ConsumerState<AllInventory> {
-  List<Inventory> _itemFoldersList = [];
-  bool _isSynced = false;
   //Query Database and get All Items with this folder name
   //Redundant code
-  StreamSubscription<QuerySnapshot<Model>>? _stream;
-
-  void observeQuery() {
-    _stream = Amplify.DataStore.observeQuery(
-      Inventory.classType,
-      where: Inventory.CATEGORYOFITEMSID.eq(""),
-      sortBy: List.empty(),
-    ).listen((QuerySnapshot<Inventory> snapshot) {
-      setState(() {
-        _itemFoldersList = snapshot.items;
-        _isSynced = snapshot.isSynced;
-      });
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +23,8 @@ class _AllInventoryState extends ConsumerState<AllInventory> {
     Iterable<String> allCategory =
         foldersList?.map((items) => items.category_name ?? '') ?? [];
 
-    safePrint(allCategory.length);
+    Iterable<String> allCategoryid =
+        foldersList?.map((items) => items.id) ?? [];
 
     return Scaffold(
       appBar: AppBar(),
@@ -57,7 +37,7 @@ class _AllInventoryState extends ConsumerState<AllInventory> {
               SizedBox(
                 child: Column(
                   children: [
-                    Text('No of Categories'),
+                    const Text('No of Categories'),
                     Text(
                       noOfCategory.toString(),
                     )
@@ -66,13 +46,13 @@ class _AllInventoryState extends ConsumerState<AllInventory> {
               ),
               Row(
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     height: 100,
                   ),
                   SizedBox(
                     child: Column(
                       children: [
-                        Text('Total Value'),
+                        const Text('Total Value'),
                         Text(
                           noOfCategory.toString(),
                         )
@@ -83,14 +63,20 @@ class _AllInventoryState extends ConsumerState<AllInventory> {
               )
             ],
           ),
-          Container(
+          SizedBox(
             height: 500,
             child: ListView.builder(
                 itemCount: allCategory.length,
                 itemBuilder: (context, index) {
                   return ListTile(
-                    title: Text(allCategory.elementAt(index)),
-                  );
+                      title: Text(allCategory.elementAt(index)),
+                      onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: ((context) => ShowCategory(
+                                    allCategory.elementAt(index),
+                                    allCategoryid.elementAt(index)))),
+                          ));
                 }),
           )
         ],

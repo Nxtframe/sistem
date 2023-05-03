@@ -21,6 +21,7 @@
 
 import 'ModelProvider.dart';
 import 'package:amplify_core/amplify_core.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 
 
@@ -30,18 +31,17 @@ class Inventory extends Model {
   static const classType = const _InventoryModelType();
   final String id;
   final String? _stock_name;
-  final String? _stock_organization_id;
-  final int? _stock_no;
+  final double? _stock_price;
   final int? _stock_sold;
   final int? _stock_sold_today;
   final TemporalDate? _stock_last_added;
   final String? _stock_created;
-  final String? _stock_category;
-  final Organization? _organization2Inventory;
+  final String? _organizationID;
   final String? _categoryofitemsID;
+  final int? _stock_no;
+  final List<StockTransactionInventory>? _stocktransactions;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
-  final String? _inventoryOrganization2InventoryId;
 
   @override
   getInstanceType() => classType;
@@ -69,12 +69,8 @@ class Inventory extends Model {
     }
   }
   
-  String? get stock_organization_id {
-    return _stock_organization_id;
-  }
-  
-  int? get stock_no {
-    return _stock_no;
+  double? get stock_price {
+    return _stock_price;
   }
   
   int? get stock_sold {
@@ -93,12 +89,17 @@ class Inventory extends Model {
     return _stock_created;
   }
   
-  String? get stock_category {
-    return _stock_category;
-  }
-  
-  Organization? get organization2Inventory {
-    return _organization2Inventory;
+  String get organizationID {
+    try {
+      return _organizationID!;
+    } catch(e) {
+      throw new AmplifyCodeGenModelException(
+          AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion:
+            AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString()
+          );
+    }
   }
   
   String get categoryofitemsID {
@@ -114,6 +115,14 @@ class Inventory extends Model {
     }
   }
   
+  int? get stock_no {
+    return _stock_no;
+  }
+  
+  List<StockTransactionInventory>? get stocktransactions {
+    return _stocktransactions;
+  }
+  
   TemporalDateTime? get createdAt {
     return _createdAt;
   }
@@ -122,26 +131,21 @@ class Inventory extends Model {
     return _updatedAt;
   }
   
-  String? get inventoryOrganization2InventoryId {
-    return _inventoryOrganization2InventoryId;
-  }
+  const Inventory._internal({required this.id, required stock_name, stock_price, stock_sold, stock_sold_today, stock_last_added, stock_created, required organizationID, required categoryofitemsID, stock_no, stocktransactions, createdAt, updatedAt}): _stock_name = stock_name, _stock_price = stock_price, _stock_sold = stock_sold, _stock_sold_today = stock_sold_today, _stock_last_added = stock_last_added, _stock_created = stock_created, _organizationID = organizationID, _categoryofitemsID = categoryofitemsID, _stock_no = stock_no, _stocktransactions = stocktransactions, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  const Inventory._internal({required this.id, required stock_name, stock_organization_id, stock_no, stock_sold, stock_sold_today, stock_last_added, stock_created, stock_category, organization2Inventory, required categoryofitemsID, createdAt, updatedAt, inventoryOrganization2InventoryId}): _stock_name = stock_name, _stock_organization_id = stock_organization_id, _stock_no = stock_no, _stock_sold = stock_sold, _stock_sold_today = stock_sold_today, _stock_last_added = stock_last_added, _stock_created = stock_created, _stock_category = stock_category, _organization2Inventory = organization2Inventory, _categoryofitemsID = categoryofitemsID, _createdAt = createdAt, _updatedAt = updatedAt, _inventoryOrganization2InventoryId = inventoryOrganization2InventoryId;
-  
-  factory Inventory({String? id, required String stock_name, String? stock_organization_id, int? stock_no, int? stock_sold, int? stock_sold_today, TemporalDate? stock_last_added, String? stock_created, String? stock_category, Organization? organization2Inventory, required String categoryofitemsID, String? inventoryOrganization2InventoryId}) {
+  factory Inventory({String? id, required String stock_name, double? stock_price, int? stock_sold, int? stock_sold_today, TemporalDate? stock_last_added, String? stock_created, required String organizationID, required String categoryofitemsID, int? stock_no, List<StockTransactionInventory>? stocktransactions}) {
     return Inventory._internal(
       id: id == null ? UUID.getUUID() : id,
       stock_name: stock_name,
-      stock_organization_id: stock_organization_id,
-      stock_no: stock_no,
+      stock_price: stock_price,
       stock_sold: stock_sold,
       stock_sold_today: stock_sold_today,
       stock_last_added: stock_last_added,
       stock_created: stock_created,
-      stock_category: stock_category,
-      organization2Inventory: organization2Inventory,
+      organizationID: organizationID,
       categoryofitemsID: categoryofitemsID,
-      inventoryOrganization2InventoryId: inventoryOrganization2InventoryId);
+      stock_no: stock_no,
+      stocktransactions: stocktransactions != null ? List<StockTransactionInventory>.unmodifiable(stocktransactions) : stocktransactions);
   }
   
   bool equals(Object other) {
@@ -154,16 +158,15 @@ class Inventory extends Model {
     return other is Inventory &&
       id == other.id &&
       _stock_name == other._stock_name &&
-      _stock_organization_id == other._stock_organization_id &&
-      _stock_no == other._stock_no &&
+      _stock_price == other._stock_price &&
       _stock_sold == other._stock_sold &&
       _stock_sold_today == other._stock_sold_today &&
       _stock_last_added == other._stock_last_added &&
       _stock_created == other._stock_created &&
-      _stock_category == other._stock_category &&
-      _organization2Inventory == other._organization2Inventory &&
+      _organizationID == other._organizationID &&
       _categoryofitemsID == other._categoryofitemsID &&
-      _inventoryOrganization2InventoryId == other._inventoryOrganization2InventoryId;
+      _stock_no == other._stock_no &&
+      DeepCollectionEquality().equals(_stocktransactions, other._stocktransactions);
   }
   
   @override
@@ -176,79 +179,78 @@ class Inventory extends Model {
     buffer.write("Inventory {");
     buffer.write("id=" + "$id" + ", ");
     buffer.write("stock_name=" + "$_stock_name" + ", ");
-    buffer.write("stock_organization_id=" + "$_stock_organization_id" + ", ");
-    buffer.write("stock_no=" + (_stock_no != null ? _stock_no!.toString() : "null") + ", ");
+    buffer.write("stock_price=" + (_stock_price != null ? _stock_price!.toString() : "null") + ", ");
     buffer.write("stock_sold=" + (_stock_sold != null ? _stock_sold!.toString() : "null") + ", ");
     buffer.write("stock_sold_today=" + (_stock_sold_today != null ? _stock_sold_today!.toString() : "null") + ", ");
     buffer.write("stock_last_added=" + (_stock_last_added != null ? _stock_last_added!.format() : "null") + ", ");
     buffer.write("stock_created=" + "$_stock_created" + ", ");
-    buffer.write("stock_category=" + "$_stock_category" + ", ");
+    buffer.write("organizationID=" + "$_organizationID" + ", ");
     buffer.write("categoryofitemsID=" + "$_categoryofitemsID" + ", ");
+    buffer.write("stock_no=" + (_stock_no != null ? _stock_no!.toString() : "null") + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
-    buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null") + ", ");
-    buffer.write("inventoryOrganization2InventoryId=" + "$_inventoryOrganization2InventoryId");
+    buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
     buffer.write("}");
     
     return buffer.toString();
   }
   
-  Inventory copyWith({String? stock_name, String? stock_organization_id, int? stock_no, int? stock_sold, int? stock_sold_today, TemporalDate? stock_last_added, String? stock_created, String? stock_category, Organization? organization2Inventory, String? categoryofitemsID, String? inventoryOrganization2InventoryId}) {
+  Inventory copyWith({String? stock_name, double? stock_price, int? stock_sold, int? stock_sold_today, TemporalDate? stock_last_added, String? stock_created, String? organizationID, String? categoryofitemsID, int? stock_no, List<StockTransactionInventory>? stocktransactions}) {
     return Inventory._internal(
       id: id,
       stock_name: stock_name ?? this.stock_name,
-      stock_organization_id: stock_organization_id ?? this.stock_organization_id,
-      stock_no: stock_no ?? this.stock_no,
+      stock_price: stock_price ?? this.stock_price,
       stock_sold: stock_sold ?? this.stock_sold,
       stock_sold_today: stock_sold_today ?? this.stock_sold_today,
       stock_last_added: stock_last_added ?? this.stock_last_added,
       stock_created: stock_created ?? this.stock_created,
-      stock_category: stock_category ?? this.stock_category,
-      organization2Inventory: organization2Inventory ?? this.organization2Inventory,
+      organizationID: organizationID ?? this.organizationID,
       categoryofitemsID: categoryofitemsID ?? this.categoryofitemsID,
-      inventoryOrganization2InventoryId: inventoryOrganization2InventoryId ?? this.inventoryOrganization2InventoryId);
+      stock_no: stock_no ?? this.stock_no,
+      stocktransactions: stocktransactions ?? this.stocktransactions);
   }
   
   Inventory.fromJson(Map<String, dynamic> json)  
     : id = json['id'],
       _stock_name = json['stock_name'],
-      _stock_organization_id = json['stock_organization_id'],
-      _stock_no = (json['stock_no'] as num?)?.toInt(),
+      _stock_price = (json['stock_price'] as num?)?.toDouble(),
       _stock_sold = (json['stock_sold'] as num?)?.toInt(),
       _stock_sold_today = (json['stock_sold_today'] as num?)?.toInt(),
       _stock_last_added = json['stock_last_added'] != null ? TemporalDate.fromString(json['stock_last_added']) : null,
       _stock_created = json['stock_created'],
-      _stock_category = json['stock_category'],
-      _organization2Inventory = json['organization2Inventory']?['serializedData'] != null
-        ? Organization.fromJson(new Map<String, dynamic>.from(json['organization2Inventory']['serializedData']))
-        : null,
+      _organizationID = json['organizationID'],
       _categoryofitemsID = json['categoryofitemsID'],
+      _stock_no = (json['stock_no'] as num?)?.toInt(),
+      _stocktransactions = json['stocktransactions'] is List
+        ? (json['stocktransactions'] as List)
+          .where((e) => e?['serializedData'] != null)
+          .map((e) => StockTransactionInventory.fromJson(new Map<String, dynamic>.from(e['serializedData'])))
+          .toList()
+        : null,
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
-      _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null,
-      _inventoryOrganization2InventoryId = json['inventoryOrganization2InventoryId'];
+      _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'stock_name': _stock_name, 'stock_organization_id': _stock_organization_id, 'stock_no': _stock_no, 'stock_sold': _stock_sold, 'stock_sold_today': _stock_sold_today, 'stock_last_added': _stock_last_added?.format(), 'stock_created': _stock_created, 'stock_category': _stock_category, 'organization2Inventory': _organization2Inventory?.toJson(), 'categoryofitemsID': _categoryofitemsID, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format(), 'inventoryOrganization2InventoryId': _inventoryOrganization2InventoryId
+    'id': id, 'stock_name': _stock_name, 'stock_price': _stock_price, 'stock_sold': _stock_sold, 'stock_sold_today': _stock_sold_today, 'stock_last_added': _stock_last_added?.format(), 'stock_created': _stock_created, 'organizationID': _organizationID, 'categoryofitemsID': _categoryofitemsID, 'stock_no': _stock_no, 'stocktransactions': _stocktransactions?.map((StockTransactionInventory? e) => e?.toJson()).toList(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
   
   Map<String, Object?> toMap() => {
-    'id': id, 'stock_name': _stock_name, 'stock_organization_id': _stock_organization_id, 'stock_no': _stock_no, 'stock_sold': _stock_sold, 'stock_sold_today': _stock_sold_today, 'stock_last_added': _stock_last_added, 'stock_created': _stock_created, 'stock_category': _stock_category, 'organization2Inventory': _organization2Inventory, 'categoryofitemsID': _categoryofitemsID, 'createdAt': _createdAt, 'updatedAt': _updatedAt, 'inventoryOrganization2InventoryId': _inventoryOrganization2InventoryId
+    'id': id, 'stock_name': _stock_name, 'stock_price': _stock_price, 'stock_sold': _stock_sold, 'stock_sold_today': _stock_sold_today, 'stock_last_added': _stock_last_added, 'stock_created': _stock_created, 'organizationID': _organizationID, 'categoryofitemsID': _categoryofitemsID, 'stock_no': _stock_no, 'stocktransactions': _stocktransactions, 'createdAt': _createdAt, 'updatedAt': _updatedAt
   };
 
   static final QueryModelIdentifier<InventoryModelIdentifier> MODEL_IDENTIFIER = QueryModelIdentifier<InventoryModelIdentifier>();
   static final QueryField ID = QueryField(fieldName: "id");
   static final QueryField STOCK_NAME = QueryField(fieldName: "stock_name");
-  static final QueryField STOCK_ORGANIZATION_ID = QueryField(fieldName: "stock_organization_id");
-  static final QueryField STOCK_NO = QueryField(fieldName: "stock_no");
+  static final QueryField STOCK_PRICE = QueryField(fieldName: "stock_price");
   static final QueryField STOCK_SOLD = QueryField(fieldName: "stock_sold");
   static final QueryField STOCK_SOLD_TODAY = QueryField(fieldName: "stock_sold_today");
   static final QueryField STOCK_LAST_ADDED = QueryField(fieldName: "stock_last_added");
   static final QueryField STOCK_CREATED = QueryField(fieldName: "stock_created");
-  static final QueryField STOCK_CATEGORY = QueryField(fieldName: "stock_category");
-  static final QueryField ORGANIZATION2INVENTORY = QueryField(
-    fieldName: "organization2Inventory",
-    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: 'Organization'));
+  static final QueryField ORGANIZATIONID = QueryField(fieldName: "organizationID");
   static final QueryField CATEGORYOFITEMSID = QueryField(fieldName: "categoryofitemsID");
-  static final QueryField INVENTORYORGANIZATION2INVENTORYID = QueryField(fieldName: "inventoryOrganization2InventoryId");
+  static final QueryField STOCK_NO = QueryField(fieldName: "stock_no");
+  static final QueryField STOCKTRANSACTIONS = QueryField(
+    fieldName: "stocktransactions",
+    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: 'StockTransactionInventory'));
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Inventory";
     modelSchemaDefinition.pluralName = "Inventories";
@@ -273,6 +275,7 @@ class Inventory extends Model {
     ];
     
     modelSchemaDefinition.indexes = [
+      ModelIndex(fields: const ["organizationID"], name: "byOrganization"),
       ModelIndex(fields: const ["categoryofitemsID"], name: "byCategoryOfItems")
     ];
     
@@ -285,15 +288,9 @@ class Inventory extends Model {
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Inventory.STOCK_ORGANIZATION_ID,
+      key: Inventory.STOCK_PRICE,
       isRequired: false,
-      ofType: ModelFieldType(ModelFieldTypeEnum.string)
-    ));
-    
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Inventory.STOCK_NO,
-      isRequired: false,
-      ofType: ModelFieldType(ModelFieldTypeEnum.int)
+      ofType: ModelFieldType(ModelFieldTypeEnum.double)
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
@@ -321,22 +318,28 @@ class Inventory extends Model {
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Inventory.STOCK_CATEGORY,
-      isRequired: false,
+      key: Inventory.ORGANIZATIONID,
+      isRequired: true,
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
-    ));
-    
-    modelSchemaDefinition.addField(ModelFieldDefinition.hasOne(
-      key: Inventory.ORGANIZATION2INVENTORY,
-      isRequired: false,
-      ofModelName: 'Organization',
-      associatedKey: Organization.ID
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
       key: Inventory.CATEGORYOFITEMSID,
       isRequired: true,
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Inventory.STOCK_NO,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.int)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.hasMany(
+      key: Inventory.STOCKTRANSACTIONS,
+      isRequired: false,
+      ofModelName: 'StockTransactionInventory',
+      associatedKey: StockTransactionInventory.INVENTORY
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.nonQueryField(
@@ -351,12 +354,6 @@ class Inventory extends Model {
       isRequired: false,
       isReadOnly: true,
       ofType: ModelFieldType(ModelFieldTypeEnum.dateTime)
-    ));
-    
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Inventory.INVENTORYORGANIZATION2INVENTORYID,
-      isRequired: false,
-      ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
   });
 }

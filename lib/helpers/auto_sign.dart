@@ -2,7 +2,7 @@
 
 import 'package:amplify_flutter/amplify_flutter.dart';
 
-Future<bool> autoSignin(
+Future<bool> autosignin(
     {required String email, required String password}) async {
   try {
     await Amplify.Auth.signIn(

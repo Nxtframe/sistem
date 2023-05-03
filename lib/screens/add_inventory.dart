@@ -1,13 +1,8 @@
-import 'dart:async';
-
-import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sistem/helpers/query_database_exists.dart';
-import 'package:sistem/models/Inventory.dart';
+import 'package:sistem/helpers/create_inventory.dart';
+import 'package:sistem/providers/category_information.dart';
 import 'package:sistem/providers/category_provider.dart';
-
-import '../models/CategoryOfItems.dart';
 
 class AddInventory extends ConsumerStatefulWidget {
   const AddInventory({super.key});
@@ -20,6 +15,7 @@ class _AddInventoryState extends ConsumerState<AddInventory> {
   final TextEditingController stockNameController = TextEditingController();
   final TextEditingController stockOrganizationIdController =
       TextEditingController();
+  final TextEditingController stockPriceController = TextEditingController();
   final TextEditingController stockNoController = TextEditingController();
   final TextEditingController stockSoldController = TextEditingController();
   final TextEditingController stockSoldTodayController =
@@ -31,14 +27,15 @@ class _AddInventoryState extends ConsumerState<AddInventory> {
   final TextEditingController categoryIdController = TextEditingController();
   final TextEditingController inventoryOrganization2InventoryIdController =
       TextEditingController();
-
-  List<String?> _dropdownValues = []; // options for dropdown
+// options for dropdown
   String? _selectedValue; // currently selected option
+
+  String? _selectedValueid;
 
   @override
   void initState() {
     super.initState();
-    _fetchDropdownOptions();
+    // _fetchDropdownOptions();
   }
 
   @override
@@ -56,68 +53,79 @@ class _AddInventoryState extends ConsumerState<AddInventory> {
     super.dispose();
   }
 
-  Future<void> _fetchDropdownOptions() async {
-    try {
-      final items = await Amplify.DataStore.query(CategoryOfItems.classType);
-      final options = items.map((item) => item.category_name).toList();
-      setState(() {
-        _dropdownValues = options;
-      });
-    } catch (e) {
-      print('Error fetching dropdown options: $e');
-    }
-  }
+  // Future<void> _fetchDropdownOptions() async {
+  //   try {
+  //     final organizationId = ref.watch(organizationIdProvider).value;
+  //     final items = await Amplify.DataStore.query(CategoryOfItems.classType,
+  //         where: CategoryOfItems.ORGANIZATIONID.eq(organizationId));
+  //     safePrint(items);
+  //     final options = items.map((item) => item.category_name).toList();
+  //     final optionsid = items.map((item) => item.id).toList();
+  //     setState(() {
+  //       _dropdownValuesId = optionsid;
+  //       _dropdownValues = options;
+  //     });
+  //   } catch (e) {
+  //     print('Error fetching dropdown options: $e');
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
     var noofCategory = ref.watch(noOfCategoryProvider).value;
+    final foldersList = ref.watch(categoryListProvider).value;
+    List<String> dropdownValues =
+        foldersList?.map((items) => items.category_name ?? '').toList() ?? [];
+
+    List<String> dropdownValuesId =
+        foldersList?.map((items) => items.id).toList() ?? [];
     return Scaffold(
         appBar: AppBar(
-          title: Text('Add Inventory'),
+          title: const Text('Add Inventory'),
         ),
         body: Column(children: [
           Row(
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 100,
               ),
               SizedBox(
                 child: Column(
-                  children: [Text('Categories'), Text('$noofCategory')],
+                  children: [const Text('Categories'), Text('$noofCategory')],
                 ),
               ),
               Row(
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     height: 100,
                   ),
                   SizedBox(
                     child: Column(
-                      children: [Text('Items'), Text("test")],
+                      children: const [Text('Items'), Text("test")],
                     ),
                   )
                 ],
               ),
               Row(
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     height: 100,
                   ),
                   SizedBox(
                     child: Column(
-                      children: [Text('Total'), Text("test")],
+                      children: const [Text('Total'), Text("test")],
                     ),
                   )
                 ],
               ),
               Row(
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     height: 100,
                   ),
                   SizedBox(
                     child: Column(
-                      children: [Text('Total Value'), Text("test")],
+                      children: const [Text('Total Value'), Text("test")],
                     ),
                   )
                 ],
@@ -131,35 +139,49 @@ class _AddInventoryState extends ConsumerState<AddInventory> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               DropdownButtonFormField<String>(
-                decoration: InputDecoration(labelText: 'Category'),
-                items: _dropdownValues
+                decoration: const InputDecoration(labelText: 'Category'),
+                items: dropdownValues
                     .map((value) => DropdownMenuItem<String>(
                           value: value,
-                          child: Text(value!),
+                          child: Text(value),
                         ))
                     .toList(),
                 value: _selectedValue,
                 onChanged: (value) {
+                  final index = dropdownValues.indexOf(value!);
                   setState(() {
                     _selectedValue = value;
+                    _selectedValueid = dropdownValuesId.elementAt(index);
                   });
                 },
               ),
               TextFormField(
                 controller: stockNoController,
                 keyboardType: TextInputType.number,
-                decoration: InputDecoration(labelText: 'No of Stock'),
+                decoration: const InputDecoration(labelText: 'No of Stock'),
               ),
               TextFormField(
-                controller: stockNoController,
+                controller: stockNameController,
                 keyboardType: TextInputType.number,
-                decoration: InputDecoration(labelText: 'Stock Name'),
+                decoration: const InputDecoration(labelText: 'Stock Name'),
               ),
-              SizedBox(height: 16.0),
-              SizedBox(height: 16.0),
+              TextFormField(
+                controller: stockPriceController,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(labelText: 'Stock Price'),
+              ),
+              const SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               ElevatedButton(
-                onPressed: () {},
-                child: Text('Add Inventory'),
+                onPressed: () async {
+                  await saveInventory(
+                          stockNameController.text,
+                          _selectedValueid!,
+                          double.parse(stockPriceController.text),
+                          ref)
+                      .then((value) => Navigator.pop(context));
+                },
+                child: const Text('Add Inventory'),
               )
             ],
           )

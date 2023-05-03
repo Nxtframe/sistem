@@ -41,5 +41,29 @@
         "sistem9d5761b3": {}
       }
     }
+  },
+  "devmser": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-sistem-devmser-193804-authRole",
+      "UnauthRoleArn": "arn:aws:iam::698151473416:role/amplify-sistem-devmser-193804-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::698151473416:role/amplify-sistem-devmser-193804-authRole",
+      "Region": "ap-northeast-2",
+      "DeploymentBucketName": "amplify-sistem-devmser-193804-deployment",
+      "UnauthRoleName": "amplify-sistem-devmser-193804-unauthRole",
+      "StackName": "amplify-sistem-devmser-193804",
+      "StackId": "arn:aws:cloudformation:ap-northeast-2:698151473416:stack/amplify-sistem-devmser-193804/9bc9bd60-e372-11ed-a0da-0a205c8a4248",
+      "AmplifyAppId": "d80ej04gvs773"
+    },
+    "categories": {
+      "auth": {
+        "sistem9d5761b3": {}
+      },
+      "api": {
+        "sistem": {}
+      },
+      "storage": {
+        "s3profile": {}
+      }
+    }
   }
 }

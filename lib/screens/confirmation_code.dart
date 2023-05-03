@@ -1,9 +1,7 @@
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
-import 'package:sistem/helpers/autoSign.dart';
-import 'package:sistem/helpers/isRegisteredSP.dart';
+import 'package:sistem/helpers/auto_sign.dart';
+import 'package:sistem/screens/info_input_screen.dart';
 
 class ConfirmationCode extends StatefulWidget {
   const ConfirmationCode(
@@ -15,38 +13,47 @@ class ConfirmationCode extends StatefulWidget {
 }
 
 class _ConfirmationCodeState extends State<ConfirmationCode> {
-  late TextEditingController _activationCodeController =
+  late final TextEditingController _activationCodeController =
       TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Column(
-      children: [
-        TextFormField(
-          controller: _activationCodeController,
-          decoration: const InputDecoration(hintText: "Confirmation Code"),
-        ),
-        ElevatedButton(
-            onPressed: () async {
-              Amplify.Auth.confirmSignUp(
-                      username: widget.email,
-                      confirmationCode: _activationCodeController.text)
-                  .then((value) async => {
-                        await autoSignin(
-                            email: widget.email, password: widget.password),
-                        await isRegisteredSP(),
-                      }); //(P1)Feels like digging into Props again, Riverpod next time
-            },
-            child: Text("Confirm")),
-        ElevatedButton(
-            onPressed: () {
-              Amplify.Auth.resendSignUpCode(
-                username: widget.email,
-              );
-            },
-            child: Text("Resend"))
-      ],
+        body: SingleChildScrollView(
+      reverse: true,
+      child: Column(
+        children: [
+          const SizedBox(
+            height: 500,
+          ),
+          TextFormField(
+            controller: _activationCodeController,
+            decoration: const InputDecoration(hintText: "Confirmation Code"),
+          ),
+          ElevatedButton(
+              onPressed: () async {
+                Amplify.Auth.confirmSignUp(
+                        username: widget.email,
+                        confirmationCode: _activationCodeController.text)
+                    .then((value) async => {
+                          await autosignin(
+                              email: widget.email, password: widget.password),
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: ((context) => const InfoInput())))
+                        }); //(P1)Feels like digging into Props again, Riverpod next time
+              },
+              child: const Text("Confirm")),
+          ElevatedButton(
+              onPressed: () {
+                Amplify.Auth.resendSignUpCode(
+                  username: widget.email,
+                );
+              },
+              child: const Text("Resend"))
+        ],
+      ),
     ));
   }
 }

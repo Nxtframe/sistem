@@ -1,0 +1,18 @@
+{
+  "resourceName": "s3profile",
+  "policyUUID": "29ac402d",
+  "bucketName": "sistem454e43fdc2b44c23b965f6c9755f4c27",
+  "storageAccess": "authAndGuest",
+  "guestAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ],
+  "triggerFunction": "NONE",
+  "groupAccess": {}
+}

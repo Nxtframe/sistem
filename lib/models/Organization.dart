@@ -33,6 +33,9 @@ class Organization extends Model {
   final String? _organization_name;
   final String? _organization_created;
   final List<Employee>? _employeetoorganisation;
+  final List<Inventory>? _iventorytorelationship;
+  final List<CategoryOfItems>? _category2organisation;
+  final List<StockTransaction>? _StockTransactions;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
 
@@ -61,6 +64,18 @@ class Organization extends Model {
     return _employeetoorganisation;
   }
   
+  List<Inventory>? get iventorytorelationship {
+    return _iventorytorelationship;
+  }
+  
+  List<CategoryOfItems>? get category2organisation {
+    return _category2organisation;
+  }
+  
+  List<StockTransaction>? get StockTransactions {
+    return _StockTransactions;
+  }
+  
   TemporalDateTime? get createdAt {
     return _createdAt;
   }
@@ -69,14 +84,17 @@ class Organization extends Model {
     return _updatedAt;
   }
   
-  const Organization._internal({required this.id, organization_name, organization_created, employeetoorganisation, createdAt, updatedAt}): _organization_name = organization_name, _organization_created = organization_created, _employeetoorganisation = employeetoorganisation, _createdAt = createdAt, _updatedAt = updatedAt;
+  const Organization._internal({required this.id, organization_name, organization_created, employeetoorganisation, iventorytorelationship, category2organisation, StockTransactions, createdAt, updatedAt}): _organization_name = organization_name, _organization_created = organization_created, _employeetoorganisation = employeetoorganisation, _iventorytorelationship = iventorytorelationship, _category2organisation = category2organisation, _StockTransactions = StockTransactions, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory Organization({String? id, String? organization_name, String? organization_created, List<Employee>? employeetoorganisation}) {
+  factory Organization({String? id, String? organization_name, String? organization_created, List<Employee>? employeetoorganisation, List<Inventory>? iventorytorelationship, List<CategoryOfItems>? category2organisation, List<StockTransaction>? StockTransactions}) {
     return Organization._internal(
       id: id == null ? UUID.getUUID() : id,
       organization_name: organization_name,
       organization_created: organization_created,
-      employeetoorganisation: employeetoorganisation != null ? List<Employee>.unmodifiable(employeetoorganisation) : employeetoorganisation);
+      employeetoorganisation: employeetoorganisation != null ? List<Employee>.unmodifiable(employeetoorganisation) : employeetoorganisation,
+      iventorytorelationship: iventorytorelationship != null ? List<Inventory>.unmodifiable(iventorytorelationship) : iventorytorelationship,
+      category2organisation: category2organisation != null ? List<CategoryOfItems>.unmodifiable(category2organisation) : category2organisation,
+      StockTransactions: StockTransactions != null ? List<StockTransaction>.unmodifiable(StockTransactions) : StockTransactions);
   }
   
   bool equals(Object other) {
@@ -90,7 +108,10 @@ class Organization extends Model {
       id == other.id &&
       _organization_name == other._organization_name &&
       _organization_created == other._organization_created &&
-      DeepCollectionEquality().equals(_employeetoorganisation, other._employeetoorganisation);
+      DeepCollectionEquality().equals(_employeetoorganisation, other._employeetoorganisation) &&
+      DeepCollectionEquality().equals(_iventorytorelationship, other._iventorytorelationship) &&
+      DeepCollectionEquality().equals(_category2organisation, other._category2organisation) &&
+      DeepCollectionEquality().equals(_StockTransactions, other._StockTransactions);
   }
   
   @override
@@ -111,12 +132,15 @@ class Organization extends Model {
     return buffer.toString();
   }
   
-  Organization copyWith({String? organization_name, String? organization_created, List<Employee>? employeetoorganisation}) {
+  Organization copyWith({String? organization_name, String? organization_created, List<Employee>? employeetoorganisation, List<Inventory>? iventorytorelationship, List<CategoryOfItems>? category2organisation, List<StockTransaction>? StockTransactions}) {
     return Organization._internal(
       id: id,
       organization_name: organization_name ?? this.organization_name,
       organization_created: organization_created ?? this.organization_created,
-      employeetoorganisation: employeetoorganisation ?? this.employeetoorganisation);
+      employeetoorganisation: employeetoorganisation ?? this.employeetoorganisation,
+      iventorytorelationship: iventorytorelationship ?? this.iventorytorelationship,
+      category2organisation: category2organisation ?? this.category2organisation,
+      StockTransactions: StockTransactions ?? this.StockTransactions);
   }
   
   Organization.fromJson(Map<String, dynamic> json)  
@@ -129,15 +153,33 @@ class Organization extends Model {
           .map((e) => Employee.fromJson(new Map<String, dynamic>.from(e['serializedData'])))
           .toList()
         : null,
+      _iventorytorelationship = json['iventorytorelationship'] is List
+        ? (json['iventorytorelationship'] as List)
+          .where((e) => e?['serializedData'] != null)
+          .map((e) => Inventory.fromJson(new Map<String, dynamic>.from(e['serializedData'])))
+          .toList()
+        : null,
+      _category2organisation = json['category2organisation'] is List
+        ? (json['category2organisation'] as List)
+          .where((e) => e?['serializedData'] != null)
+          .map((e) => CategoryOfItems.fromJson(new Map<String, dynamic>.from(e['serializedData'])))
+          .toList()
+        : null,
+      _StockTransactions = json['StockTransactions'] is List
+        ? (json['StockTransactions'] as List)
+          .where((e) => e?['serializedData'] != null)
+          .map((e) => StockTransaction.fromJson(new Map<String, dynamic>.from(e['serializedData'])))
+          .toList()
+        : null,
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'organization_name': _organization_name, 'organization_created': _organization_created, 'employeetoorganisation': _employeetoorganisation?.map((Employee? e) => e?.toJson()).toList(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'organization_name': _organization_name, 'organization_created': _organization_created, 'employeetoorganisation': _employeetoorganisation?.map((Employee? e) => e?.toJson()).toList(), 'iventorytorelationship': _iventorytorelationship?.map((Inventory? e) => e?.toJson()).toList(), 'category2organisation': _category2organisation?.map((CategoryOfItems? e) => e?.toJson()).toList(), 'StockTransactions': _StockTransactions?.map((StockTransaction? e) => e?.toJson()).toList(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
   
   Map<String, Object?> toMap() => {
-    'id': id, 'organization_name': _organization_name, 'organization_created': _organization_created, 'employeetoorganisation': _employeetoorganisation, 'createdAt': _createdAt, 'updatedAt': _updatedAt
+    'id': id, 'organization_name': _organization_name, 'organization_created': _organization_created, 'employeetoorganisation': _employeetoorganisation, 'iventorytorelationship': _iventorytorelationship, 'category2organisation': _category2organisation, 'StockTransactions': _StockTransactions, 'createdAt': _createdAt, 'updatedAt': _updatedAt
   };
 
   static final QueryModelIdentifier<OrganizationModelIdentifier> MODEL_IDENTIFIER = QueryModelIdentifier<OrganizationModelIdentifier>();
@@ -147,6 +189,15 @@ class Organization extends Model {
   static final QueryField EMPLOYEETOORGANISATION = QueryField(
     fieldName: "employeetoorganisation",
     fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: 'Employee'));
+  static final QueryField IVENTORYTORELATIONSHIP = QueryField(
+    fieldName: "iventorytorelationship",
+    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: 'Inventory'));
+  static final QueryField CATEGORY2ORGANISATION = QueryField(
+    fieldName: "category2organisation",
+    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: 'CategoryOfItems'));
+  static final QueryField STOCKTRANSACTIONS = QueryField(
+    fieldName: "StockTransactions",
+    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: 'StockTransaction'));
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Organization";
     modelSchemaDefinition.pluralName = "Organizations";
@@ -189,6 +240,27 @@ class Organization extends Model {
       isRequired: true,
       ofModelName: 'Employee',
       associatedKey: Employee.ORGANIZATIONIDTOEMPLOYEERELATION
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.hasMany(
+      key: Organization.IVENTORYTORELATIONSHIP,
+      isRequired: false,
+      ofModelName: 'Inventory',
+      associatedKey: Inventory.ORGANIZATIONID
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.hasMany(
+      key: Organization.CATEGORY2ORGANISATION,
+      isRequired: false,
+      ofModelName: 'CategoryOfItems',
+      associatedKey: CategoryOfItems.ORGANIZATIONID
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.hasMany(
+      key: Organization.STOCKTRANSACTIONS,
+      isRequired: false,
+      ofModelName: 'StockTransaction',
+      associatedKey: StockTransaction.ORGANIZATIONID
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.nonQueryField(

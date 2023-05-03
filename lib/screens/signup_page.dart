@@ -4,7 +4,7 @@ import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:sistem/screens/all_inventory_folder.dart';
+import 'package:sistem/screens/all_category_folder.dart';
 import 'package:sistem/screens/confirmation_code.dart';
 import 'package:sistem/screens/info_input_screen.dart';
 import 'package:sistem/screens/single_inventory.dart';
@@ -19,12 +19,13 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
-  TextEditingController _userController = TextEditingController();
-  TextEditingController _activationCodeController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _userController = TextEditingController();
+  final TextEditingController _activationCodeController =
+      TextEditingController();
   late bool isSignUpComplete = false;
-  late bool _confirmCodeFailed = false;
+  late final bool _confirmCodeFailed = false;
   late bool _isLoading;
   late String? _errorMessage = '';
 
@@ -63,7 +64,7 @@ class _SignupPageState extends State<SignupPage> {
                 builder: (context) => ConfirmationCode(
                     email: _emailController.text,
                     password: _passwordController.text)));
-      } on AmplifyException catch (e) {
+      } on AmplifyException {
         setState(() {
           _errorMessage = 'User already exists';
         });
@@ -137,7 +138,6 @@ class _SignupPageState extends State<SignupPage> {
                             email: email);
                       }
                     }
-                    ;
                   },
                 ),
                 Text(_errorMessage!.isNotEmpty ? _errorMessage! : '')

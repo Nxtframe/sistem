@@ -1,15 +1,14 @@
 // ignore_for_file: prefer_const_constructors
 // P# = Priority #=1-5
 import 'package:amplify_flutter/amplify_flutter.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistem/helpers/query_database_exists.dart';
 import 'package:sistem/screens/confirmation_code.dart';
 import 'package:sistem/screens/homepage.dart';
 import 'package:sistem/screens/info_input_screen.dart';
 import 'package:sistem/screens/signup_page.dart';
-import 'package:sistem/theme/app_theme.dart';
+
+import '../helpers/isRegisteredSP.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -21,8 +20,8 @@ class SignInPage extends StatefulWidget {
 final _formKey = GlobalKey<FormState>();
 
 class _SignInPageState extends State<SignInPage> {
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   bool isSignedIn = false;
   String userError = '';
   Future<void> _signInUser(
@@ -54,7 +53,6 @@ class _SignInPageState extends State<SignInPage> {
 
   @override
   Widget build(BuildContext context) {
-    SharedPreferences prefs;
     return Scaffold(
         body: SingleChildScrollView(
       reverse: true,
@@ -92,14 +90,14 @@ class _SignInPageState extends State<SignInPage> {
                     );
                     if (isSignedIn &&
                         await queryDatabaseforEmail(_emailController.text)) {
-                      prefs = await SharedPreferences.getInstance();
-                      prefs.setBool('isRegistered', true);
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (BuildContext context) => const HomePage(),
-                        ),
-                      );
+                      await isRegisteredSP()
+                          .then((value) => Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      const HomePage(),
+                                ),
+                              ));
                     } else {
                       Navigator.pushReplacement(
                         context,
@@ -108,7 +106,7 @@ class _SignInPageState extends State<SignInPage> {
                         ),
                       );
                     }
-                  } on UserNotConfirmedException catch (e) {
+                  } on UserNotConfirmedException {
                     // Handle the error here
                     Navigator.push(
                         context,
