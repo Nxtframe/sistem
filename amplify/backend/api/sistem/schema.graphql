@@ -1,3 +1,16 @@
+type PurchaseOrders @model @auth(rules: [{allow: private}]) {
+  id: ID!
+  totalPrice: Float
+  address: String
+  comments: String
+  organizationID: ID! @index(name: "byOrganization")
+  employeeID: ID! @index(name: "byEmployee")
+  received: Boolean
+  paid: Boolean
+  inventorys: [Inventory] @manyToMany(relationName: "InventoryPurchaseOrders")
+  noofinventoryitems: String
+}
+
 type StockTransaction @model @auth(rules: [{allow: private}]) {
   id: ID!
   date: AWSDate
@@ -21,7 +34,8 @@ type Organization @model @auth(rules: [{allow: public}, {allow: private}]) {
   employeetoorganisation: [Employee!] @hasMany(indexName: "byOrganization", fields: ["id"])
   iventorytorelationship: [Inventory] @hasMany(indexName: "byOrganization", fields: ["id"])
   category2organisation: [CategoryOfItems] @hasMany(indexName: "byOrganization", fields: ["id"])
-  StockTransactions: [StockTransaction] @hasMany(indexName: "byOrganization", fields: ["id"])
+  stockTransactions: [StockTransaction] @hasMany(indexName: "byOrganization", fields: ["id"])
+  purchaseOrders: [PurchaseOrders!] @hasMany(indexName: "byOrganization", fields: ["id"])
 }
 
 type Employee @model @auth(rules: [{allow: public}, {allow: private}]) {
@@ -32,11 +46,12 @@ type Employee @model @auth(rules: [{allow: public}, {allow: private}]) {
   employee_phone: Int
   employee_created: String
   organizationIDtoEmployeeRelation: ID @index(name: "byOrganization")
+  purchaseOrders: [PurchaseOrders!] @hasMany(indexName: "byEmployee", fields: ["id"])
 }
 
 type Inventory @model @auth(rules: [{allow: public}, {allow: private}]) {
   id: ID!
-  stock_name: String!
+  stock_image: String
   stock_price: Float
   stock_sold: Int
   stock_sold_today: Int
@@ -46,5 +61,7 @@ type Inventory @model @auth(rules: [{allow: public}, {allow: private}]) {
   categoryofitemsID: ID! @index(name: "byCategoryOfItems")
   stock_no: Int
   stocktransactions: [StockTransaction] @manyToMany(relationName: "StockTransactionInventory")
+  purchaseOrders: [PurchaseOrders] @manyToMany(relationName: "InventoryPurchaseOrders")
+  stock_name: String!
 }
  

@@ -1,4 +1,3 @@
-import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -14,7 +13,6 @@ class AppBarWidget extends ConsumerWidget with PreferredSizeWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final infoUser = ref.watch(userInfo).value ?? 'user';
-    safePrint(infoUser);
     String userProfilePictureValue =
         "https://fastly.picsum.photos/id/1008/200/200.jpg?hmac=I0T_cpYR-61pUlB0jVB4I5B7tL0fvzN5MgslAOirM50";
     var alternateImage =

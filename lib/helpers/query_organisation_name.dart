@@ -14,3 +14,17 @@ Future<String?> queryOrgansationName(String organisationId) async {
   }
   return null;
 }
+
+Future<Organization> queryOrganization(String orgId) async {
+  try {
+    final List<Organization> organisations = await Amplify.DataStore.query(
+        Organization.classType,
+        where: Organization.ID.eq(orgId));
+    if (organisations.isNotEmpty) {
+      return organisations.first;
+    }
+  } catch (e) {
+    throw Exception('Organization querying failed');
+  }
+  return Organization();
+}

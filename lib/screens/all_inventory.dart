@@ -18,6 +18,7 @@ class _InventoryOnlyState extends ConsumerState<InventoryOnly> {
   @override
   Widget build(BuildContext context) {
     final orgInventory = ref.watch(inventoryListProvider).value;
+    safePrint('OrgInventory: ${orgInventory.toString()}');
     setState(() {
       inventoryState.clear();
       for (var item in orgInventory!) {

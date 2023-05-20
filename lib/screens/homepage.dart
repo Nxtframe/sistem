@@ -2,12 +2,17 @@ import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistem/helpers/isRegisteredSP.dart';
+import 'package:sistem/helpers/upload_picture.dart';
 import 'package:sistem/providers/profile_info.dart';
+import 'package:sistem/providers/total_stock_provider.dart';
+import 'package:sistem/screens/ShowOrders/showOrders.dart';
 import 'package:sistem/screens/add_category.dart';
 import 'package:sistem/screens/add_inventory.dart';
 import 'package:sistem/screens/all_category_folder.dart';
 import 'package:sistem/screens/all_inventory.dart';
+import 'package:sistem/screens/Orders/addOrder.dart';
 import 'package:sistem/screens/signin_page.dart';
+import 'package:sistem/screens/update_screen.dart';
 import 'package:sistem/widgets/app_bar.dart';
 import 'package:sistem/widgets/cards.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -35,9 +40,18 @@ class _HomePageState extends ConsumerState<HomePage> {
   @override
   Widget build(BuildContext context) {
     final infoUser = ref.watch(userInfo).value ?? 'user';
+    final userId =
+        ref.watch(userInfoId).value ?? 'assets/profile/defaultimage.jpg';
     final avaliableItems = ref.watch(inventoryListProvider).value ?? [];
     final totalAvaliable = avaliableItems.length;
-
+    final totalStock = ref.watch(totalStockProvider).value ?? [];
+    final totalStockQuantity = totalStock.fold<int>(
+        0, (total, transaction) => total + (transaction.quantity ?? 0));
+    List<SalesData> dateQuantityList = totalStock
+        .map((transaction) =>
+            SalesData(transaction.date.toString(), transaction.quantity ?? 0))
+        .toList();
+    safePrint(dateQuantityList);
     return Scaffold(
       appBar: AppBarWidget(),
       body: SingleChildScrollView(
@@ -49,15 +63,16 @@ class _HomePageState extends ConsumerState<HomePage> {
             mainAxisAlignment: MainAxisAlignment
                 .spaceAround, //2 Rows for the 4 cards - First Row.
             children: [
-              const CardWidget(
+              CardWidget(
                 cardBgColor: 0xFF8A0AC5,
-                businessMetric: "Today Sales",
-                quantity: 0, //Take a List of ???? idk
+                businessMetric: "Total Unique Items",
+                quantity: avaliableItems.length, //Take a List of ???? idk
               ),
               CardWidget(
                 cardBgColor: 0xFF0015FF,
                 businessMetric: "Stock Avaliable",
-                quantity: totalAvaliable, //Take All the Inventory from provider
+                quantity:
+                    totalStockQuantity, //Take All the Inventory from provider
               ),
             ],
           ),
@@ -75,23 +90,17 @@ class _HomePageState extends ConsumerState<HomePage> {
               //Using LineSeries SFCartesian Chart for the Line chart.
               primaryXAxis: CategoryAxis(),
               // Chart title
-              title: ChartTitle(text: 'Today Sales'),
+              title: ChartTitle(text: 'Today Stock Added'),
               // Enable legend
               legend: Legend(isVisible: false),
               // Enable tooltip
               tooltipBehavior: _tooltipBehavior,
-              series: <LineSeries<SalesData, String>>[
-                LineSeries<SalesData, String>(
-                    name: "Sales",
-                    dataSource: [
-                      SalesData('6 AM', 35),
-                      SalesData('9 AM', 28),
-                      SalesData('12 PM', 34),
-                      SalesData('3 PM', 32),
-                      SalesData('6 PM', 40)
-                    ],
-                    xValueMapper: (SalesData sales, _) => sales.year,
-                    yValueMapper: (SalesData sales, _) => sales.sales,
+              series: <LineSeries>[
+                LineSeries(
+                    name: "Total Stock",
+                    dataSource: dateQuantityList,
+                    xValueMapper: (dynamic sales, int index) => sales.year,
+                    yValueMapper: (dynamic sales, int index) => sales.sales,
                     // Enable data label
                     dataLabelSettings: const DataLabelSettings(isVisible: true))
               ])
@@ -140,6 +149,7 @@ class _HomePageState extends ConsumerState<HomePage> {
               GestureDetector(
                 onTap: () async => {
                   await Amplify.Auth.signOut(),
+                  await Amplify.DataStore.clear(),
                   await isRegisteredSPDestroy(),
                   Navigator.pushReplacement(
                       context,
@@ -190,12 +200,39 @@ class _HomePageState extends ConsumerState<HomePage> {
               ),
               child: Column(children: [
                 GestureDetector(
+                  onTap: () => {uploadPicture(userId)},
                   child: SizedBox(
                     height: 80,
                     width: MediaQuery.of(context).size.width,
-                    child: const CircleAvatar(
-                        backgroundImage: NetworkImage(
-                            "https://i.stack.imgur.com/x8PhM.png")),
+                    child: FutureBuilder<GetUrlResult>(
+                      future: Amplify.Storage.getUrl(
+                          key:
+                              userId), // Replace "userId" with your AWS Amplify Storage key
+                      builder: (BuildContext context,
+                          AsyncSnapshot<GetUrlResult> snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const CircularProgressIndicator();
+                        }
+                        if (snapshot.hasData) {
+                          final imageUrl = snapshot.data!;
+                          return CircleAvatar(
+                            backgroundImage: NetworkImage(imageUrl.url),
+                            child: imageUrl.url.isEmpty
+                                ? const Icon(Icons.account_circle,
+                                    size:
+                                        80) // Placeholder icon if imageUrl is empty
+                                : null,
+                          );
+                        } else if (snapshot.hasError) {
+                          return const Icon(Icons.error);
+                        } else {
+                          return const Icon(Icons.account_circle,
+                              size:
+                                  80); // Placeholder icon if imageUrl is empty
+                        }
+                      },
+                    ),
                   ),
                 ),
                 Text(infoUser),
@@ -264,14 +301,41 @@ class _HomePageState extends ConsumerState<HomePage> {
               ),
               title: const Text('Update Inventory'),
               onTap: () {
-                Navigator.pop(context);
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const UpdateInventoryScreen()));
+              },
+            ),
+            ListTile(
+              leading: const Icon(
+                Icons.account_circle,
+              ),
+              title: const Text('Purchases'),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const AddOrderWidget()));
+              },
+            ),
+            ListTile(
+              leading: const Icon(
+                Icons.account_circle,
+              ),
+              title: const Text('Purchase history'),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const ShowOrders()));
               },
             ),
             ListTile(
               leading: const Icon(
                 Icons.scale_sharp,
               ),
-              title: const Text('Total Sales(not done)'),
+              title: const Text('Total Stock All Time( not done )'),
               onTap: () {
                 Navigator.pop(context);
               },
@@ -280,7 +344,7 @@ class _HomePageState extends ConsumerState<HomePage> {
               leading: const Icon(
                 Icons.inbox,
               ),
-              title: const Text('Invoices(not done)'),
+              title: const Text('Invoices of the Items Bought (not done)'),
               onTap: () {
                 Navigator.pop(context);
               },
@@ -295,7 +359,7 @@ class _HomePageState extends ConsumerState<HomePage> {
 class SalesData {
   //List Type for datasource for LineSeries in SFCartesian Chart.
   final String year;
-  final double sales;
+  final int sales;
 
   SalesData(this.year, this.sales);
 }

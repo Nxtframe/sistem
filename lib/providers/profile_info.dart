@@ -16,3 +16,18 @@ FutureProvider<String> userInfo = FutureProvider<String>((ref) async {
     return '';
   }
 });
+
+FutureProvider<String?> userInfoId = FutureProvider<String?>((ref) async {
+  // your asynchronous logic to get the string
+  try {
+    final result = await Amplify.Auth.fetchUserAttributes();
+    for (final attribute in result) {
+      if (attribute.userAttributeKey == CognitoUserAttributeKey.sub) {
+        return attribute.value;
+      }
+    }
+    return null;
+  } on AuthException {
+    return null;
+  }
+});

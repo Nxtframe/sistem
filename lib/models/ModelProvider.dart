@@ -23,22 +23,26 @@ import 'package:amplify_core/amplify_core.dart';
 import 'CategoryOfItems.dart';
 import 'Employee.dart';
 import 'Inventory.dart';
+import 'InventoryPurchaseOrders.dart';
 import 'Organization.dart';
+import 'PurchaseOrders.dart';
 import 'StockTransaction.dart';
 import 'StockTransactionInventory.dart';
 
 export 'CategoryOfItems.dart';
 export 'Employee.dart';
 export 'Inventory.dart';
+export 'InventoryPurchaseOrders.dart';
 export 'Organization.dart';
+export 'PurchaseOrders.dart';
 export 'StockTransaction.dart';
 export 'StockTransactionInventory.dart';
 
 class ModelProvider implements ModelProviderInterface {
   @override
-  String version = "d8e911ca71dd2b39659e5fa3c968b71b";
+  String version = "961d0118691b11d133f8425b959c33ec";
   @override
-  List<ModelSchema> modelSchemas = [CategoryOfItems.schema, Employee.schema, Inventory.schema, Organization.schema, StockTransaction.schema, StockTransactionInventory.schema];
+  List<ModelSchema> modelSchemas = [CategoryOfItems.schema, Employee.schema, Inventory.schema, InventoryPurchaseOrders.schema, Organization.schema, PurchaseOrders.schema, StockTransaction.schema, StockTransactionInventory.schema];
   static final ModelProvider _instance = ModelProvider();
   @override
   List<ModelSchema> customTypeSchemas = [];
@@ -53,8 +57,12 @@ class ModelProvider implements ModelProviderInterface {
         return Employee.classType;
       case "Inventory":
         return Inventory.classType;
+      case "InventoryPurchaseOrders":
+        return InventoryPurchaseOrders.classType;
       case "Organization":
         return Organization.classType;
+      case "PurchaseOrders":
+        return PurchaseOrders.classType;
       case "StockTransaction":
         return StockTransaction.classType;
       case "StockTransactionInventory":

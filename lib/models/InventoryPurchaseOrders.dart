@@ -21,18 +21,16 @@
 
 import 'ModelProvider.dart';
 import 'package:amplify_core/amplify_core.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 
 
-/** This is an auto generated class representing the CategoryOfItems type in your schema. */
+/** This is an auto generated class representing the InventoryPurchaseOrders type in your schema. */
 @immutable
-class CategoryOfItems extends Model {
-  static const classType = const _CategoryOfItemsModelType();
+class InventoryPurchaseOrders extends Model {
+  static const classType = const _InventoryPurchaseOrdersModelType();
   final String id;
-  final String? _category_name;
-  final String? _organizationID;
-  final List<Inventory>? _Inventories;
+  final PurchaseOrders? _purchaseOrders;
+  final Inventory? _inventory;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
 
@@ -43,19 +41,15 @@ class CategoryOfItems extends Model {
   @override
   String getId() => id;
   
-  CategoryOfItemsModelIdentifier get modelIdentifier {
-      return CategoryOfItemsModelIdentifier(
+  InventoryPurchaseOrdersModelIdentifier get modelIdentifier {
+      return InventoryPurchaseOrdersModelIdentifier(
         id: id
       );
   }
   
-  String? get category_name {
-    return _category_name;
-  }
-  
-  String get organizationID {
+  PurchaseOrders get purchaseOrders {
     try {
-      return _organizationID!;
+      return _purchaseOrders!;
     } catch(e) {
       throw new AmplifyCodeGenModelException(
           AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
@@ -66,8 +60,17 @@ class CategoryOfItems extends Model {
     }
   }
   
-  List<Inventory>? get Inventories {
-    return _Inventories;
+  Inventory get inventory {
+    try {
+      return _inventory!;
+    } catch(e) {
+      throw new AmplifyCodeGenModelException(
+          AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion:
+            AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString()
+          );
+    }
   }
   
   TemporalDateTime? get createdAt {
@@ -78,14 +81,13 @@ class CategoryOfItems extends Model {
     return _updatedAt;
   }
   
-  const CategoryOfItems._internal({required this.id, category_name, required organizationID, Inventories, createdAt, updatedAt}): _category_name = category_name, _organizationID = organizationID, _Inventories = Inventories, _createdAt = createdAt, _updatedAt = updatedAt;
+  const InventoryPurchaseOrders._internal({required this.id, required purchaseOrders, required inventory, createdAt, updatedAt}): _purchaseOrders = purchaseOrders, _inventory = inventory, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory CategoryOfItems({String? id, String? category_name, required String organizationID, List<Inventory>? Inventories}) {
-    return CategoryOfItems._internal(
+  factory InventoryPurchaseOrders({String? id, required PurchaseOrders purchaseOrders, required Inventory inventory}) {
+    return InventoryPurchaseOrders._internal(
       id: id == null ? UUID.getUUID() : id,
-      category_name: category_name,
-      organizationID: organizationID,
-      Inventories: Inventories != null ? List<Inventory>.unmodifiable(Inventories) : Inventories);
+      purchaseOrders: purchaseOrders,
+      inventory: inventory);
   }
   
   bool equals(Object other) {
@@ -95,11 +97,10 @@ class CategoryOfItems extends Model {
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is CategoryOfItems &&
+    return other is InventoryPurchaseOrders &&
       id == other.id &&
-      _category_name == other._category_name &&
-      _organizationID == other._organizationID &&
-      DeepCollectionEquality().equals(_Inventories, other._Inventories);
+      _purchaseOrders == other._purchaseOrders &&
+      _inventory == other._inventory;
   }
   
   @override
@@ -109,10 +110,10 @@ class CategoryOfItems extends Model {
   String toString() {
     var buffer = new StringBuffer();
     
-    buffer.write("CategoryOfItems {");
+    buffer.write("InventoryPurchaseOrders {");
     buffer.write("id=" + "$id" + ", ");
-    buffer.write("category_name=" + "$_category_name" + ", ");
-    buffer.write("organizationID=" + "$_organizationID" + ", ");
+    buffer.write("purchaseOrders=" + (_purchaseOrders != null ? _purchaseOrders!.toString() : "null") + ", ");
+    buffer.write("inventory=" + (_inventory != null ? _inventory!.toString() : "null") + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
     buffer.write("}");
@@ -120,88 +121,63 @@ class CategoryOfItems extends Model {
     return buffer.toString();
   }
   
-  CategoryOfItems copyWith({String? category_name, String? organizationID, List<Inventory>? Inventories}) {
-    return CategoryOfItems._internal(
+  InventoryPurchaseOrders copyWith({PurchaseOrders? purchaseOrders, Inventory? inventory}) {
+    return InventoryPurchaseOrders._internal(
       id: id,
-      category_name: category_name ?? this.category_name,
-      organizationID: organizationID ?? this.organizationID,
-      Inventories: Inventories ?? this.Inventories);
+      purchaseOrders: purchaseOrders ?? this.purchaseOrders,
+      inventory: inventory ?? this.inventory);
   }
   
-  CategoryOfItems.fromJson(Map<String, dynamic> json)  
+  InventoryPurchaseOrders.fromJson(Map<String, dynamic> json)  
     : id = json['id'],
-      _category_name = json['category_name'],
-      _organizationID = json['organizationID'],
-      _Inventories = json['Inventories'] is List
-        ? (json['Inventories'] as List)
-          .where((e) => e?['serializedData'] != null)
-          .map((e) => Inventory.fromJson(new Map<String, dynamic>.from(e['serializedData'])))
-          .toList()
+      _purchaseOrders = json['purchaseOrders']?['serializedData'] != null
+        ? PurchaseOrders.fromJson(new Map<String, dynamic>.from(json['purchaseOrders']['serializedData']))
+        : null,
+      _inventory = json['inventory']?['serializedData'] != null
+        ? Inventory.fromJson(new Map<String, dynamic>.from(json['inventory']['serializedData']))
         : null,
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'category_name': _category_name, 'organizationID': _organizationID, 'Inventories': _Inventories?.map((Inventory? e) => e?.toJson()).toList(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'purchaseOrders': _purchaseOrders?.toJson(), 'inventory': _inventory?.toJson(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
   
   Map<String, Object?> toMap() => {
-    'id': id, 'category_name': _category_name, 'organizationID': _organizationID, 'Inventories': _Inventories, 'createdAt': _createdAt, 'updatedAt': _updatedAt
+    'id': id, 'purchaseOrders': _purchaseOrders, 'inventory': _inventory, 'createdAt': _createdAt, 'updatedAt': _updatedAt
   };
 
-  static final QueryModelIdentifier<CategoryOfItemsModelIdentifier> MODEL_IDENTIFIER = QueryModelIdentifier<CategoryOfItemsModelIdentifier>();
+  static final QueryModelIdentifier<InventoryPurchaseOrdersModelIdentifier> MODEL_IDENTIFIER = QueryModelIdentifier<InventoryPurchaseOrdersModelIdentifier>();
   static final QueryField ID = QueryField(fieldName: "id");
-  static final QueryField CATEGORY_NAME = QueryField(fieldName: "category_name");
-  static final QueryField ORGANIZATIONID = QueryField(fieldName: "organizationID");
-  static final QueryField INVENTORIES = QueryField(
-    fieldName: "Inventories",
+  static final QueryField PURCHASEORDERS = QueryField(
+    fieldName: "purchaseOrders",
+    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: 'PurchaseOrders'));
+  static final QueryField INVENTORY = QueryField(
+    fieldName: "inventory",
     fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: 'Inventory'));
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
-    modelSchemaDefinition.name = "CategoryOfItems";
-    modelSchemaDefinition.pluralName = "CategoryOfItems";
-    
-    modelSchemaDefinition.authRules = [
-      AuthRule(
-        authStrategy: AuthStrategy.PUBLIC,
-        operations: [
-          ModelOperation.CREATE,
-          ModelOperation.UPDATE,
-          ModelOperation.DELETE,
-          ModelOperation.READ
-        ]),
-      AuthRule(
-        authStrategy: AuthStrategy.PRIVATE,
-        operations: [
-          ModelOperation.CREATE,
-          ModelOperation.UPDATE,
-          ModelOperation.DELETE,
-          ModelOperation.READ
-        ])
-    ];
+    modelSchemaDefinition.name = "InventoryPurchaseOrders";
+    modelSchemaDefinition.pluralName = "InventoryPurchaseOrders";
     
     modelSchemaDefinition.indexes = [
-      ModelIndex(fields: const ["organizationID"], name: "byOrganization")
+      ModelIndex(fields: const ["purchaseOrdersId"], name: "byPurchaseOrders"),
+      ModelIndex(fields: const ["inventoryId"], name: "byInventory")
     ];
     
     modelSchemaDefinition.addField(ModelFieldDefinition.id());
     
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: CategoryOfItems.CATEGORY_NAME,
-      isRequired: false,
-      ofType: ModelFieldType(ModelFieldTypeEnum.string)
-    ));
-    
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: CategoryOfItems.ORGANIZATIONID,
+    modelSchemaDefinition.addField(ModelFieldDefinition.belongsTo(
+      key: InventoryPurchaseOrders.PURCHASEORDERS,
       isRequired: true,
-      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+      targetNames: ['purchaseOrdersId'],
+      ofModelName: 'PurchaseOrders'
     ));
     
-    modelSchemaDefinition.addField(ModelFieldDefinition.hasMany(
-      key: CategoryOfItems.INVENTORIES,
-      isRequired: false,
-      ofModelName: 'Inventory',
-      associatedKey: Inventory.CATEGORYOFITEMSID
+    modelSchemaDefinition.addField(ModelFieldDefinition.belongsTo(
+      key: InventoryPurchaseOrders.INVENTORY,
+      isRequired: true,
+      targetNames: ['inventoryId'],
+      ofModelName: 'Inventory'
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.nonQueryField(
@@ -220,30 +196,30 @@ class CategoryOfItems extends Model {
   });
 }
 
-class _CategoryOfItemsModelType extends ModelType<CategoryOfItems> {
-  const _CategoryOfItemsModelType();
+class _InventoryPurchaseOrdersModelType extends ModelType<InventoryPurchaseOrders> {
+  const _InventoryPurchaseOrdersModelType();
   
   @override
-  CategoryOfItems fromJson(Map<String, dynamic> jsonData) {
-    return CategoryOfItems.fromJson(jsonData);
+  InventoryPurchaseOrders fromJson(Map<String, dynamic> jsonData) {
+    return InventoryPurchaseOrders.fromJson(jsonData);
   }
   
   @override
   String modelName() {
-    return 'CategoryOfItems';
+    return 'InventoryPurchaseOrders';
   }
 }
 
 /**
  * This is an auto generated class representing the model identifier
- * of [CategoryOfItems] in your schema.
+ * of [InventoryPurchaseOrders] in your schema.
  */
 @immutable
-class CategoryOfItemsModelIdentifier implements ModelIdentifier<CategoryOfItems> {
+class InventoryPurchaseOrdersModelIdentifier implements ModelIdentifier<InventoryPurchaseOrders> {
   final String id;
 
-  /** Create an instance of CategoryOfItemsModelIdentifier using [id] the primary key. */
-  const CategoryOfItemsModelIdentifier({
+  /** Create an instance of InventoryPurchaseOrdersModelIdentifier using [id] the primary key. */
+  const InventoryPurchaseOrdersModelIdentifier({
     required this.id});
   
   @override
@@ -261,7 +237,7 @@ class CategoryOfItemsModelIdentifier implements ModelIdentifier<CategoryOfItems>
   String serializeAsString() => serializeAsMap().values.join('#');
   
   @override
-  String toString() => 'CategoryOfItemsModelIdentifier(id: $id)';
+  String toString() => 'InventoryPurchaseOrdersModelIdentifier(id: $id)';
   
   @override
   bool operator ==(Object other) {
@@ -269,7 +245,7 @@ class CategoryOfItemsModelIdentifier implements ModelIdentifier<CategoryOfItems>
       return true;
     }
     
-    return other is CategoryOfItemsModelIdentifier &&
+    return other is InventoryPurchaseOrdersModelIdentifier &&
       id == other.id;
   }
   

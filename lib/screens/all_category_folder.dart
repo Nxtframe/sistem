@@ -1,5 +1,7 @@
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sistem/models/CategoryOfItems.dart';
 import 'package:sistem/providers/category_provider.dart';
 import 'package:sistem/screens/show_item_in_category.dart';
 
@@ -52,10 +54,10 @@ class _AllInventoryState extends ConsumerState<AllInventory> {
                   SizedBox(
                     child: Column(
                       children: [
-                        const Text('Total Value'),
+                        const Text('Total Value of Categories'),
                         Text(
                           noOfCategory.toString(),
-                        )
+                        ),
                       ],
                     ),
                   )
@@ -69,14 +71,27 @@ class _AllInventoryState extends ConsumerState<AllInventory> {
                 itemCount: allCategory.length,
                 itemBuilder: (context, index) {
                   return ListTile(
-                      title: Text(allCategory.elementAt(index)),
-                      onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: ((context) => ShowCategory(
-                                    allCategory.elementAt(index),
-                                    allCategoryid.elementAt(index)))),
-                          ));
+                    title: Text(allCategory.elementAt(index)),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: ((context) => ShowCategory(
+                              allCategory.elementAt(index),
+                              allCategoryid.elementAt(index)))),
+                    ),
+                    trailing: IconButton(
+                      icon: const Icon(Icons.delete),
+                      onPressed: () async {
+                        final itemToDelete = (await Amplify.DataStore.query(
+                          CategoryOfItems.classType,
+                          where: CategoryOfItems.ID
+                              .eq(allCategoryid.elementAt(index)),
+                        ))
+                            .first;
+                        await Amplify.DataStore.delete(itemToDelete);
+                      },
+                    ),
+                  );
                 }),
           )
         ],

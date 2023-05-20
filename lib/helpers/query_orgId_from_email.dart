@@ -12,7 +12,7 @@ Future<String?> queryOrgansationIdFromEmail() async {
     if (organisations.isNotEmpty) {
       return organisations[0].organizationIDtoEmployeeRelation;
     } else {
-      return 'No ORganisation which is false';
+      throw Error();
     }
   } catch (e) {
     return 'Catch this';

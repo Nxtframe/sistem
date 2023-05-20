@@ -31,8 +31,9 @@ class _SignInPageState extends State<SignInPage> {
         username: email,
         password: password,
       );
+      bool obj = await queryDatabaseforEmail(email.toLowerCase());
       setState(() {
-        isSignedIn = result.isSignedIn;
+        isSignedIn = result.isSignedIn && obj;
       });
     } on UserNotConfirmedException catch (e) {
       // (P-2)Refactor this to Be a Global state
@@ -87,25 +88,27 @@ class _SignInPageState extends State<SignInPage> {
                     await _signInUser(
                       email: _emailController.text,
                       password: _passwordController.text,
-                    );
-                    if (isSignedIn &&
-                        await queryDatabaseforEmail(_emailController.text)) {
-                      await isRegisteredSP()
-                          .then((value) => Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (BuildContext context) =>
-                                      const HomePage(),
-                                ),
-                              ));
-                    } else {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (BuildContext context) => const InfoInput(),
-                        ),
-                      );
-                    }
+                    ).then((value) async {
+                      if (isSignedIn) {
+                        await isRegisteredSP()
+                            .then((value) => Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        const HomePage(),
+                                  ),
+                                ));
+                      } else {
+                        await isRegisteredSPDestroy()
+                            .then((value) => Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        const InfoInput(),
+                                  ),
+                                ));
+                      }
+                    });
                   } on UserNotConfirmedException {
                     // Handle the error here
                     Navigator.push(

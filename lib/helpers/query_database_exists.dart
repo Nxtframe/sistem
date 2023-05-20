@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:sistem/models/ModelProvider.dart';
 
@@ -12,11 +14,19 @@ Future<bool> queryDatabase(String organisationId) async {
 }
 
 Future<bool> queryDatabaseforEmail(String emailid) async {
+  final completer = Completer<bool>();
+  late StreamSubscription subscription;
+  subscription = Amplify.DataStore.observeQuery(Employee.classType,
+          where: Employee.EMPLOYEE_EMAIL.eq(emailid))
+      .listen((_) {
+    subscription.cancel();
+    completer.complete(true);
+  }, onError: (e) {
+    completer.completeError(e);
+  }, cancelOnError: true);
   try {
-    final organisationID = await Amplify.DataStore.query(Employee.classType,
-        where: Employee.EMPLOYEE_EMAIL.eq(emailid));
-    return organisationID.isNotEmpty;
-  } catch (e) {
-    throw Exception('Can\'t Sign in Right now');
+    return await completer.future.timeout(const Duration(seconds: 10));
+  } catch (_) {
+    return false;
   }
 }

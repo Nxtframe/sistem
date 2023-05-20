@@ -1,20 +1,29 @@
-// import 'package:amplify_flutter/amplify_flutter.dart';
+import 'dart:io';
 
-// Future<void> uploadPicture() async {
-//   const dataString = 'Example file contents';
+import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:file_picker/file_picker.dart';
 
-//   try {
-//     final result = await Amplify.Storage.uploadFile
-//     (
-//       data: S3DataPayload.string(dataString),
-//       key: 'ExampleKey',
-//       onProgress: (progress) {
-//         safePrint('Transferred bytes: ${progress.transferredBytes}');
-//       },
-//     ).result;
+Future<void> uploadPicture(String key) async {
+  const dataString = 'Example file contents';
 
-//     safePrint('Uploaded data to location: ${result.uploadedItem.key}');
-//   } on StorageException catch (e) {
-//     safePrint(e.message);
-//   }
-// }
+  FilePickerResult? result = await FilePicker.platform.pickFiles();
+  if (result != null) {
+    String? filePath = result.files.single.path;
+    if (filePath != null) {
+      File file = File(filePath);
+      try {
+        final uploadResult =
+            await Amplify.Storage.uploadFile(local: file, key: key);
+        // Handle successful upload
+      } on StorageException catch (e) {
+        safePrint(e.message);
+        // Handle storage exception
+      }
+    } else {
+      // Handle null filePath
+      print('File path is null. Please try again.');
+    }
+  } else {
+    return;
+  }
+}

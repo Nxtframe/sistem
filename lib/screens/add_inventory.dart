@@ -83,108 +83,111 @@ class _AddInventoryState extends ConsumerState<AddInventory> {
         appBar: AppBar(
           title: const Text('Add Inventory'),
         ),
-        body: Column(children: [
-          Row(
-            children: [
-              const SizedBox(
-                height: 100,
-              ),
-              SizedBox(
-                child: Column(
-                  children: [const Text('Categories'), Text('$noofCategory')],
+        body: SingleChildScrollView(
+          reverse: true,
+          child: Column(children: [
+            Row(
+              children: [
+                const SizedBox(
+                  height: 100,
                 ),
-              ),
-              Row(
-                children: [
-                  const SizedBox(
-                    height: 100,
+                SizedBox(
+                  child: Column(
+                    children: [const Text('Categories'), Text('$noofCategory')],
                   ),
-                  SizedBox(
-                    child: Column(
-                      children: const [Text('Items'), Text("test")],
+                ),
+                Row(
+                  children: [
+                    const SizedBox(
+                      height: 100,
                     ),
-                  )
-                ],
-              ),
-              Row(
-                children: [
-                  const SizedBox(
-                    height: 100,
-                  ),
-                  SizedBox(
-                    child: Column(
-                      children: const [Text('Total'), Text("test")],
+                    SizedBox(
+                      child: Column(
+                        children: const [Text('Items'), Text("test")],
+                      ),
+                    )
+                  ],
+                ),
+                Row(
+                  children: [
+                    const SizedBox(
+                      height: 100,
                     ),
-                  )
-                ],
-              ),
-              Row(
-                children: [
-                  const SizedBox(
-                    height: 100,
-                  ),
-                  SizedBox(
-                    child: Column(
-                      children: const [Text('Total Value'), Text("test")],
+                    SizedBox(
+                      child: Column(
+                        children: const [Text('Total'), Text("test")],
+                      ),
+                    )
+                  ],
+                ),
+                Row(
+                  children: [
+                    const SizedBox(
+                      height: 100,
                     ),
-                  )
-                ],
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 50,
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              DropdownButtonFormField<String>(
-                decoration: const InputDecoration(labelText: 'Category'),
-                items: dropdownValues
-                    .map((value) => DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        ))
-                    .toList(),
-                value: _selectedValue,
-                onChanged: (value) {
-                  final index = dropdownValues.indexOf(value!);
-                  setState(() {
-                    _selectedValue = value;
-                    _selectedValueid = dropdownValuesId.elementAt(index);
-                  });
-                },
-              ),
-              TextFormField(
-                controller: stockNoController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(labelText: 'No of Stock'),
-              ),
-              TextFormField(
-                controller: stockNameController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(labelText: 'Stock Name'),
-              ),
-              TextFormField(
-                controller: stockPriceController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(labelText: 'Stock Price'),
-              ),
-              const SizedBox(height: 16.0),
-              const SizedBox(height: 16.0),
-              ElevatedButton(
-                onPressed: () async {
-                  await saveInventory(
-                          stockNameController.text,
-                          _selectedValueid!,
-                          double.parse(stockPriceController.text),
-                          ref)
-                      .then((value) => Navigator.pop(context));
-                },
-                child: const Text('Add Inventory'),
-              )
-            ],
-          )
-        ]));
+                    SizedBox(
+                      child: Column(
+                        children: const [Text('Total Value'), Text("test")],
+                      ),
+                    )
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 50,
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                DropdownButtonFormField<String>(
+                  decoration: const InputDecoration(labelText: 'Category'),
+                  items: dropdownValues
+                      .map((value) => DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          ))
+                      .toList(),
+                  value: _selectedValue,
+                  onChanged: (value) {
+                    final index = dropdownValues.indexOf(value!);
+                    setState(() {
+                      _selectedValue = value;
+                      _selectedValueid = dropdownValuesId.elementAt(index);
+                    });
+                  },
+                ),
+                TextFormField(
+                  controller: stockNoController,
+                  keyboardType: TextInputType.number,
+                  decoration: const InputDecoration(labelText: 'No of Stock'),
+                ),
+                TextFormField(
+                  controller: stockNameController,
+                  decoration: const InputDecoration(labelText: 'Stock Name'),
+                ),
+                TextFormField(
+                  controller: stockPriceController,
+                  keyboardType: TextInputType.number,
+                  decoration: const InputDecoration(labelText: 'Stock Price'),
+                ),
+                const SizedBox(height: 16.0),
+                const SizedBox(height: 16.0),
+                ElevatedButton(
+                  onPressed: () async {
+                    await saveInventory(
+                            stockNameController.text,
+                            _selectedValueid!,
+                            double.parse(stockPriceController.text),
+                            int.parse(stockNoController.text),
+                            ref)
+                        .then((value) => Navigator.pop(context));
+                  },
+                  child: const Text('Add Inventory'),
+                )
+              ],
+            )
+          ]),
+        ));
   }
 }
