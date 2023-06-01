@@ -1,7 +1,12 @@
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistem/helpers/update_model.dart';
+import 'package:sistem/models/StockTransaction.dart';
 import 'package:sistem/providers/inventory_list_provider.dart';
+import 'package:sistem/providers/oranganization_provider.dart';
+import 'package:sistem/widgets/app_bar_widget.dart';
+import 'package:uuid/uuid.dart';
 
 class UpdateInventoryScreen extends ConsumerStatefulWidget {
   const UpdateInventoryScreen({Key? key}) : super(key: key);
@@ -21,6 +26,7 @@ class _UpdateInventoryScreenState extends ConsumerState<UpdateInventoryScreen> {
   @override
   Widget build(BuildContext context) {
     final inventorySus = ref.watch(inventoryListProvider).value ?? [];
+    final organisation = ref.watch(organization).value;
     final dropdownValues =
         inventorySus.map((items) => items.stock_name).toList();
 
@@ -29,8 +35,8 @@ class _UpdateInventoryScreenState extends ConsumerState<UpdateInventoryScreen> {
     // ? inventorySus.firstWhere((element) => element.stock_name == selectedValue)
     // : null;
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Update Inventory'),
+      appBar: AppBarFragment(
+        title: 'Update Inventory',
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -105,10 +111,18 @@ class _UpdateInventoryScreenState extends ConsumerState<UpdateInventoryScreen> {
               ),
               const SizedBox(height: 32.0),
               ElevatedButton(
-                onPressed: () {
-                  if (quantityController.text.isEmpty) {
+                onPressed: () async {
+                  if (quantityController.text.isEmpty ||
+                      int.parse(quantityController.text) -
+                              inventorySus
+                                  .firstWhere((element) =>
+                                      element.stock_name == selectedValue)
+                                  .stock_no! <
+                          0) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Please enter a quantity')),
+                      const SnackBar(
+                          content:
+                              Text('Quantity Empty or Quantity less than 0')),
                     );
                   } else {
                     updateModel(
@@ -120,6 +134,19 @@ class _UpdateInventoryScreenState extends ConsumerState<UpdateInventoryScreen> {
                           .stock_no!,
                       addOrMinus, // <-- fix here
                     );
+
+                    if (addOrMinus) {
+                      // Create a new StockTransaction only when adding inventory
+                      final newStockTransaction = StockTransaction(
+                        organizationID: organisation?.id ?? '',
+                        quantity: int.parse(quantityController.text),
+                        date: TemporalDate.now(),
+                        id: const Uuid().v4(),
+                      );
+
+                      // Save the new StockTransaction to the database
+                      await Amplify.DataStore.save(newStockTransaction);
+                    }
                     Navigator.of(context).pop();
                   }
                 },

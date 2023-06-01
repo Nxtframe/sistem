@@ -4,6 +4,7 @@ import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:sistem/screens/signup_page.dart';
+import 'package:sistem/theme/theme_constants.dart';
 
 import '../../screens/signin_page.dart';
 
@@ -47,9 +48,11 @@ class _AuthenticatedAmplifyState extends State<AuthenticatedAmplify> {
         } else if (snapshot.data == true) {
           return widget.children;
         } else if (snapshot.data == false) {
-          return const MaterialApp(home: Scaffold(body: SignInPage()));
+          return MaterialApp(
+              theme: LightTheme, home: const Scaffold(body: SignInPage()));
         } else {
-          return const MaterialApp(home: Scaffold(body: SignupPage()));
+          return MaterialApp(
+              theme: LightTheme, home: const Scaffold(body: SignupPage()));
         }
       },
     );

@@ -1,3 +1,11 @@
+type UseOrders @model @auth(rules: [{allow: private}]) {
+  id: ID!
+  comments: String
+  dategiven: String
+  recipient: String
+  itemids: String
+}
+
 type PurchaseOrders @model @auth(rules: [{allow: private}]) {
   id: ID!
   totalPrice: Float
@@ -51,7 +59,7 @@ type Employee @model @auth(rules: [{allow: public}, {allow: private}]) {
 
 type Inventory @model @auth(rules: [{allow: public}, {allow: private}]) {
   id: ID!
-  stock_image: String
+  stock_image: [String]
   stock_price: Float
   stock_sold: Int
   stock_sold_today: Int

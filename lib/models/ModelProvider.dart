@@ -28,6 +28,7 @@ import 'Organization.dart';
 import 'PurchaseOrders.dart';
 import 'StockTransaction.dart';
 import 'StockTransactionInventory.dart';
+import 'UseOrders.dart';
 
 export 'CategoryOfItems.dart';
 export 'Employee.dart';
@@ -37,12 +38,13 @@ export 'Organization.dart';
 export 'PurchaseOrders.dart';
 export 'StockTransaction.dart';
 export 'StockTransactionInventory.dart';
+export 'UseOrders.dart';
 
 class ModelProvider implements ModelProviderInterface {
   @override
-  String version = "961d0118691b11d133f8425b959c33ec";
+  String version = "5faee0968e31af2bcbca34f17214a658";
   @override
-  List<ModelSchema> modelSchemas = [CategoryOfItems.schema, Employee.schema, Inventory.schema, InventoryPurchaseOrders.schema, Organization.schema, PurchaseOrders.schema, StockTransaction.schema, StockTransactionInventory.schema];
+  List<ModelSchema> modelSchemas = [CategoryOfItems.schema, Employee.schema, Inventory.schema, InventoryPurchaseOrders.schema, Organization.schema, PurchaseOrders.schema, StockTransaction.schema, StockTransactionInventory.schema, UseOrders.schema];
   static final ModelProvider _instance = ModelProvider();
   @override
   List<ModelSchema> customTypeSchemas = [];
@@ -67,6 +69,8 @@ class ModelProvider implements ModelProviderInterface {
         return StockTransaction.classType;
       case "StockTransactionInventory":
         return StockTransactionInventory.classType;
+      case "UseOrders":
+        return UseOrders.classType;
       default:
         throw Exception("Failed to find model in model provider for model name: " + modelName);
     }

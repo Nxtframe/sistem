@@ -21,7 +21,7 @@ Future<void> uploadPicture(String key) async {
       }
     } else {
       // Handle null filePath
-      print('File path is null. Please try again.');
+      safePrint('File path is null. Please try again.');
     }
   } else {
     return;

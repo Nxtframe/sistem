@@ -7,6 +7,7 @@ import 'package:sistem/models/Inventory.dart';
 import 'package:sistem/providers/employee_provider.dart';
 import 'package:sistem/providers/oranganization_provider.dart';
 import 'package:sistem/screens/Orders/inventoryList.dart';
+import 'package:sistem/widgets/app_bar_widget.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../models/PurchaseOrders.dart';
@@ -27,6 +28,13 @@ class _AddOrderWidgetState extends ConsumerState<AddOrderWidget> {
   String? _address;
   String? _comments;
   Map<String, int> inventoryObject = {};
+  String? _validateAddress(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter the address';
+    }
+    return null;
+  }
+
   void _submitForm() {
     double _calculateTotalPrice() {
       double totalPrice = 0;
@@ -86,8 +94,8 @@ class _AddOrderWidgetState extends ConsumerState<AddOrderWidget> {
     _employeeID = employee?.id ?? '';
     _organizationID = organisation?.id ?? 'Error Quering';
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Add New Order'),
+        appBar: AppBarFragment(
+          title: 'Add New Orders',
         ),
         body: SingleChildScrollView(
           child: Padding(
@@ -209,6 +217,7 @@ class _AddOrderWidgetState extends ConsumerState<AddOrderWidget> {
                           decoration:
                               const InputDecoration(labelText: 'Address'),
                           onSaved: (newValue) => _address = newValue!,
+                          validator: _validateAddress,
                         ),
                         TextFormField(
                           decoration:

@@ -30,7 +30,7 @@ import 'package:flutter/foundation.dart';
 class Inventory extends Model {
   static const classType = const _InventoryModelType();
   final String id;
-  final String? _stock_image;
+  final List<String>? _stock_image;
   final double? _stock_price;
   final int? _stock_sold;
   final int? _stock_sold_today;
@@ -58,7 +58,7 @@ class Inventory extends Model {
       );
   }
   
-  String? get stock_image {
+  List<String>? get stock_image {
     return _stock_image;
   }
   
@@ -143,10 +143,10 @@ class Inventory extends Model {
   
   const Inventory._internal({required this.id, stock_image, stock_price, stock_sold, stock_sold_today, stock_last_added, stock_created, required organizationID, required categoryofitemsID, stock_no, stocktransactions, purchaseOrders, required stock_name, createdAt, updatedAt}): _stock_image = stock_image, _stock_price = stock_price, _stock_sold = stock_sold, _stock_sold_today = stock_sold_today, _stock_last_added = stock_last_added, _stock_created = stock_created, _organizationID = organizationID, _categoryofitemsID = categoryofitemsID, _stock_no = stock_no, _stocktransactions = stocktransactions, _purchaseOrders = purchaseOrders, _stock_name = stock_name, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory Inventory({String? id, String? stock_image, double? stock_price, int? stock_sold, int? stock_sold_today, TemporalDate? stock_last_added, String? stock_created, required String organizationID, required String categoryofitemsID, int? stock_no, List<StockTransactionInventory>? stocktransactions, List<InventoryPurchaseOrders>? purchaseOrders, required String stock_name}) {
+  factory Inventory({String? id, List<String>? stock_image, double? stock_price, int? stock_sold, int? stock_sold_today, TemporalDate? stock_last_added, String? stock_created, required String organizationID, required String categoryofitemsID, int? stock_no, List<StockTransactionInventory>? stocktransactions, List<InventoryPurchaseOrders>? purchaseOrders, required String stock_name}) {
     return Inventory._internal(
       id: id == null ? UUID.getUUID() : id,
-      stock_image: stock_image,
+      stock_image: stock_image != null ? List<String>.unmodifiable(stock_image) : stock_image,
       stock_price: stock_price,
       stock_sold: stock_sold,
       stock_sold_today: stock_sold_today,
@@ -169,7 +169,7 @@ class Inventory extends Model {
     if (identical(other, this)) return true;
     return other is Inventory &&
       id == other.id &&
-      _stock_image == other._stock_image &&
+      DeepCollectionEquality().equals(_stock_image, other._stock_image) &&
       _stock_price == other._stock_price &&
       _stock_sold == other._stock_sold &&
       _stock_sold_today == other._stock_sold_today &&
@@ -192,7 +192,7 @@ class Inventory extends Model {
     
     buffer.write("Inventory {");
     buffer.write("id=" + "$id" + ", ");
-    buffer.write("stock_image=" + "$_stock_image" + ", ");
+    buffer.write("stock_image=" + (_stock_image != null ? _stock_image!.toString() : "null") + ", ");
     buffer.write("stock_price=" + (_stock_price != null ? _stock_price!.toString() : "null") + ", ");
     buffer.write("stock_sold=" + (_stock_sold != null ? _stock_sold!.toString() : "null") + ", ");
     buffer.write("stock_sold_today=" + (_stock_sold_today != null ? _stock_sold_today!.toString() : "null") + ", ");
@@ -209,7 +209,7 @@ class Inventory extends Model {
     return buffer.toString();
   }
   
-  Inventory copyWith({String? stock_image, double? stock_price, int? stock_sold, int? stock_sold_today, TemporalDate? stock_last_added, String? stock_created, String? organizationID, String? categoryofitemsID, int? stock_no, List<StockTransactionInventory>? stocktransactions, List<InventoryPurchaseOrders>? purchaseOrders, String? stock_name}) {
+  Inventory copyWith({List<String>? stock_image, double? stock_price, int? stock_sold, int? stock_sold_today, TemporalDate? stock_last_added, String? stock_created, String? organizationID, String? categoryofitemsID, int? stock_no, List<StockTransactionInventory>? stocktransactions, List<InventoryPurchaseOrders>? purchaseOrders, String? stock_name}) {
     return Inventory._internal(
       id: id,
       stock_image: stock_image ?? this.stock_image,
@@ -228,7 +228,7 @@ class Inventory extends Model {
   
   Inventory.fromJson(Map<String, dynamic> json)  
     : id = json['id'],
-      _stock_image = json['stock_image'],
+      _stock_image = json['stock_image']?.cast<String>(),
       _stock_price = (json['stock_price'] as num?)?.toDouble(),
       _stock_sold = (json['stock_sold'] as num?)?.toInt(),
       _stock_sold_today = (json['stock_sold_today'] as num?)?.toInt(),
@@ -312,7 +312,8 @@ class Inventory extends Model {
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
       key: Inventory.STOCK_IMAGE,
       isRequired: false,
-      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+      isArray: true,
+      ofType: ModelFieldType(ModelFieldTypeEnum.collection, ofModelName: describeEnum(ModelFieldTypeEnum.string))
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(

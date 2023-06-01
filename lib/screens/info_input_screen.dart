@@ -5,6 +5,7 @@ import 'package:sistem/helpers/create_emp_and_organisation.dart';
 import 'package:sistem/helpers/isRegisteredSP.dart';
 import 'package:sistem/helpers/query_database_exists.dart';
 import 'package:sistem/screens/homepage.dart';
+import 'package:sistem/widgets/app_bar_widget.dart';
 import '../widgets/error_screen.dart';
 
 class InfoInput extends ConsumerStatefulWidget {
@@ -68,6 +69,7 @@ class _InfoInputState extends ConsumerState<InfoInput> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBarFragment(),
       body: SingleChildScrollView(
         reverse: true,
         child: Column(

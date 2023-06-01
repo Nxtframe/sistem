@@ -34,6 +34,8 @@ class _ShowCategoryState extends ConsumerState<ShowCategory> {
     final items = snapshot.items
         .whereType<Inventory>() // filter the only Inventory models
         .map((item) => InventoryListItem(
+            stockImage: item.stock_image?.first ??
+                'https://upload.wikimedia.org/wikipedia/en/a/a9/Example.jpg',
             id: item.id,
             stockName: item.stock_name,
             stockNo: item.stock_no ?? 0,
@@ -77,6 +79,7 @@ class _ShowCategoryState extends ConsumerState<ShowCategory> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => SingleInventory(
+                          inventoryImage: item.stockImage,
                           itemCat: widget.categoryName,
                           itemName: item.stockName,
                           inventoryNo: item.stockNo,
@@ -96,6 +99,7 @@ class _ShowCategoryState extends ConsumerState<ShowCategory> {
 class InventoryListItem {
   final String id;
   final String stockName;
+  final String stockImage;
   final int stockNo;
   final int stockSold;
   final int stockSoldToday;
@@ -104,6 +108,7 @@ class InventoryListItem {
 
   InventoryListItem(
       {required this.id,
+      required this.stockImage,
       required this.stockName,
       required this.stockNo,
       required this.stockSold,

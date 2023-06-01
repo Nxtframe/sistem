@@ -7,13 +7,14 @@ import 'package:sistem/screens/homepage.dart';
 import 'package:sistem/screens/signin_page.dart';
 import 'package:sistem/theme/app_theme.dart';
 import 'package:sistem/screens/splash_screen.dart';
-import 'package:sistem/theme/theme_constants.dart';
 import 'package:sistem/theme/theme_manager.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'amplifyconfiguration.dart';
 import 'models/ModelProvider.dart';
 import 'package:amplify_datastore/amplify_datastore.dart';
+
+import 'theme/theme_constants.dart';
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));
@@ -60,11 +61,9 @@ class _MyAppState extends ConsumerState<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: LightTheme,
       debugShowCheckedModeBanner: false,
       title: 'SISTEM',
-      theme: LightTheme,
-      darkTheme: DarkTheme,
-      themeMode: _themeManager.themeMode,
       initialRoute: '/',
       routes: {
         '/': (context) => const SplashScreen(),

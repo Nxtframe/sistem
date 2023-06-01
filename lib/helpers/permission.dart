@@ -1,1 +1,1 @@
-
+//Emulator dosent ask for permission do later

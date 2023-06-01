@@ -11,7 +11,7 @@ import 'package:sistem/screens/signup_page.dart';
 import '../helpers/isRegisteredSP.dart';
 
 class SignInPage extends StatefulWidget {
-  const SignInPage({super.key});
+  const SignInPage({Key? key}) : super(key: key);
 
   @override
   State<SignInPage> createState() => _SignInPageState();
@@ -24,6 +24,7 @@ class _SignInPageState extends State<SignInPage> {
   final TextEditingController _passwordController = TextEditingController();
   bool isSignedIn = false;
   String userError = '';
+
   Future<void> _signInUser(
       {required String password, required String email}) async {
     try {
@@ -55,90 +56,113 @@ class _SignInPageState extends State<SignInPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: SingleChildScrollView(
-      reverse: true,
-      child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              SizedBox(
-                height: 500,
-              ),
-              TextField(
-                style: TextStyle(color: Colors.black), // Email Field
-                controller: _emailController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Email',
-                ),
-              ),
-              Text(userError.isNotEmpty ? userError : ''),
-              TextField(
-                style: TextStyle(color: Colors.black), // Email Field
-                controller: _passwordController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Password',
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  try {
-                    setState(() => userError = '');
-                    await _signInUser(
-                      email: _emailController.text,
-                      password: _passwordController.text,
-                    ).then((value) async {
-                      if (isSignedIn) {
-                        await isRegisteredSP()
-                            .then((value) => Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        const HomePage(),
-                                  ),
-                                ));
-                      } else {
-                        await isRegisteredSPDestroy()
-                            .then((value) => Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        const InfoInput(),
-                                  ),
-                                ));
-                      }
-                    });
-                  } on UserNotConfirmedException {
-                    // Handle the error here
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: ((context) => ConfirmationCode(
-                                  email: _emailController.text,
-                                  password: _passwordController.text,
-                                ))));
-                  } on UserNotFoundException catch (e) {
-                    setState(() => userError = e.message);
-                  } on AuthException catch (e) {
-                    setState(() => userError = e.message);
-                  } catch (e) {
-                    setState(() => userError = e.toString());
-                  }
-                },
-                child: const Text('Sign in'),
-              ),
-              ElevatedButton(
-                  onPressed: () => {
-                        Navigator.push(
+      backgroundColor: Colors.black87,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            const Image(
+              height: 350,
+              width: 400,
+              image: AssetImage("assets/images/register_image.png"),
+            ),
+            Form(
+              key: _formKey,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    TextFormField(
+                      style: TextStyle(color: Colors.white),
+                      // Email Field
+                      controller: _emailController,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Email',
+                        labelStyle: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                    SizedBox(height: 16),
+                    Text(userError.isNotEmpty ? userError : '',
+                        style: TextStyle(color: Colors.red)),
+                    TextFormField(
+                      obscureText: true,
+                      style: TextStyle(color: Colors.white), // Email Field
+                      controller: _passwordController,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Password',
+                        labelStyle: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                    SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: () async {
+                        try {
+                          setState(() => userError = '');
+                          await _signInUser(
+                            email: _emailController.text,
+                            password: _passwordController.text,
+                          ).then((value) async {
+                            if (isSignedIn) {
+                              await isRegisteredSP()
+                                  .then((value) => Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (BuildContext context) =>
+                                              const HomePage(),
+                                        ),
+                                      ));
+                            } else {
+                              await isRegisteredSPDestroy()
+                                  .then((value) => Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (BuildContext context) =>
+                                              const InfoInput(),
+                                        ),
+                                      ));
+                            }
+                          });
+                        } on UserNotConfirmedException {
+                          // Handle the error here
+                          Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: ((BuildContext context) =>
-                                    const SignupPage())))
+                              builder: ((context) => ConfirmationCode(
+                                    email: _emailController.text,
+                                    password: _passwordController.text,
+                                  )),
+                            ),
+                          );
+                        } on UserNotFoundException catch (e) {
+                          setState(() => userError = e.message);
+                        } on AuthException catch (e) {
+                          setState(() => userError = e.message);
+                        } catch (e) {
+                          setState(() => userError = e.toString());
+                        }
                       },
-                  child: const Text("Sign Up"))
-            ],
-          )),
-    ));
+                      child: const Text('Sign in'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () => {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: ((BuildContext context) =>
+                                const SignupPage()),
+                          ),
+                        ),
+                      },
+                      child: const Text("Sign Up"),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

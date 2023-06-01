@@ -5,7 +5,11 @@ import 'package:sistem/helpers/isRegisteredSP.dart';
 import 'package:sistem/helpers/upload_picture.dart';
 import 'package:sistem/providers/profile_info.dart';
 import 'package:sistem/providers/total_stock_provider.dart';
+import 'package:sistem/screens/About/about.dart';
+import 'package:sistem/screens/Profile/profile_user.dart';
 import 'package:sistem/screens/ShowOrders/showOrders.dart';
+import 'package:sistem/screens/Team/team_employees.dart';
+import 'package:sistem/screens/UseOrders/use_orders.dart';
 import 'package:sistem/screens/add_category.dart';
 import 'package:sistem/screens/add_inventory.dart';
 import 'package:sistem/screens/all_category_folder.dart';
@@ -13,7 +17,9 @@ import 'package:sistem/screens/all_inventory.dart';
 import 'package:sistem/screens/Orders/addOrder.dart';
 import 'package:sistem/screens/signin_page.dart';
 import 'package:sistem/screens/update_screen.dart';
-import 'package:sistem/widgets/app_bar.dart';
+import 'package:sistem/theme/app_theme.dart';
+import 'package:sistem/widgets/appbar_home.dart';
+
 import 'package:sistem/widgets/cards.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
@@ -39,9 +45,9 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final appTheme = AppTheme();
     final infoUser = ref.watch(userInfo).value ?? 'user';
-    final userId =
-        ref.watch(userInfoId).value ?? 'assets/profile/defaultimage.jpg';
+    final userId = ref.watch(userInfoId).value ?? 'assets/profile/default.png';
     final avaliableItems = ref.watch(inventoryListProvider).value ?? [];
     final totalAvaliable = avaliableItems.length;
     final totalStock = ref.watch(totalStockProvider).value ?? [];
@@ -63,16 +69,28 @@ class _HomePageState extends ConsumerState<HomePage> {
             mainAxisAlignment: MainAxisAlignment
                 .spaceAround, //2 Rows for the 4 cards - First Row.
             children: [
-              CardWidget(
-                cardBgColor: 0xFF8A0AC5,
-                businessMetric: "Total Unique Items",
-                quantity: avaliableItems.length, //Take a List of ???? idk
+              GestureDetector(
+                onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const InventoryOnly())),
+                child: CardWidget(
+                  cardBgColor: 0xFF8A0AC5,
+                  businessMetric: "Total Unique Items",
+                  quantity: avaliableItems.length, //Take a List of ???? idk
+                ),
               ),
-              CardWidget(
-                cardBgColor: 0xFF0015FF,
-                businessMetric: "Stock Avaliable",
-                quantity:
-                    totalStockQuantity, //Take All the Inventory from provider
+              GestureDetector(
+                onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const InventoryOnly())),
+                child: CardWidget(
+                  cardBgColor: 0xFF0015FF,
+                  businessMetric: "Stock Avaliable",
+                  quantity:
+                      totalStockQuantity, //Take All the Inventory from provider
+                ),
               ),
             ],
           ),
@@ -87,28 +105,20 @@ class _HomePageState extends ConsumerState<HomePage> {
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
           ),
           SfCartesianChart(
-              //Using LineSeries SFCartesian Chart for the Line chart.
-              primaryXAxis: CategoryAxis(),
-              // Chart title
-              title: ChartTitle(text: 'Today Stock Added'),
-              // Enable legend
-              legend: Legend(isVisible: false),
-              // Enable tooltip
-              tooltipBehavior: _tooltipBehavior,
-              series: <LineSeries>[
-                LineSeries(
-                    name: "Total Stock",
-                    dataSource: dateQuantityList,
-                    xValueMapper: (dynamic sales, int index) => sales.year,
-                    yValueMapper: (dynamic sales, int index) => sales.sales,
-                    // Enable data label
-                    dataLabelSettings: const DataLabelSettings(isVisible: true))
-              ])
+            primaryXAxis: CategoryAxis(),
+            series: <ChartSeries>[
+              ColumnSeries<SalesData, String>(
+                dataSource: dateQuantityList,
+                xValueMapper: (SalesData sales, _) => sales.year,
+                yValueMapper: (SalesData sales, _) => sales.sales,
+              ),
+            ],
+          ),
         ]),
       ),
       endDrawer: SizedBox(
         // The Profile Drawer, right side drawer
-        width: MediaQuery.of(context).size.width / 1.25,
+        width: MediaQuery.of(context).size.width / 2,
         child: Drawer(
           child: Column(
             children: <Widget>[
@@ -120,13 +130,17 @@ class _HomePageState extends ConsumerState<HomePage> {
               ),
               GestureDetector(
                 onTap: () {
-                  setState(() {});
-                  Navigator.of(context).pop();
+                  setState(() {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const Profile()));
+                  });
                 },
                 child: const Text(
                   'Profile',
                   style: TextStyle(
-                    fontSize: 24,
+                    fontSize: 20,
                     fontWeight: FontWeight.w700,
                   ),
                   textAlign: TextAlign.center,
@@ -135,13 +149,21 @@ class _HomePageState extends ConsumerState<HomePage> {
               const SizedBox(
                 height: 45,
               ),
-              const Text(
-                'About',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w700,
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const AboutPage()));
+                },
+                child: const Text(
+                  'About',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
               ),
               const SizedBox(
                 height: 45,
@@ -159,7 +181,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                 child: const Text(
                   'Log Out',
                   style: TextStyle(
-                    fontSize: 24,
+                    fontSize: 20,
                     fontWeight: FontWeight.w700,
                   ),
                   textAlign: TextAlign.center,
@@ -195,12 +217,13 @@ class _HomePageState extends ConsumerState<HomePage> {
           padding: EdgeInsets.zero,
           children: [
             DrawerHeader(
-              decoration: const BoxDecoration(
-                color: Color(0x33EEF0F4),
+              decoration: BoxDecoration(
+                color: Color(appTheme.backgroundColor),
               ),
               child: Column(children: [
                 GestureDetector(
-                  onTap: () => {uploadPicture(userId)},
+                  onTap: () async =>
+                      {await uploadPicture(userId), ref.refresh(userInfoId)},
                   child: SizedBox(
                     height: 80,
                     width: MediaQuery.of(context).size.width,
@@ -212,7 +235,10 @@ class _HomePageState extends ConsumerState<HomePage> {
                           AsyncSnapshot<GetUrlResult> snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
-                          return const CircularProgressIndicator();
+                          return const CircleAvatar(
+                            backgroundImage:
+                                AssetImage("assets/images/default.png"),
+                          );
                         }
                         if (snapshot.hasData) {
                           final imageUrl = snapshot.data!;
@@ -235,7 +261,8 @@ class _HomePageState extends ConsumerState<HomePage> {
                     ),
                   ),
                 ),
-                Text(infoUser),
+                const SizedBox(height: 20),
+                Text(infoUser, style: const TextStyle(color: Colors.white)),
               ]),
             ),
             ListTile(
@@ -249,7 +276,7 @@ class _HomePageState extends ConsumerState<HomePage> {
             ),
             ListTile(
               leading: const Icon(
-                Icons.train,
+                Icons.shuffle,
               ),
               title: const Text('Show Category'),
               onTap: () {
@@ -261,7 +288,7 @@ class _HomePageState extends ConsumerState<HomePage> {
             ),
             ListTile(
               leading: const Icon(
-                Icons.train,
+                Icons.amp_stories,
               ),
               title: const Text('Show Inventory'),
               onTap: () {
@@ -273,7 +300,7 @@ class _HomePageState extends ConsumerState<HomePage> {
             ),
             ListTile(
               leading: const Icon(
-                Icons.account_circle,
+                Icons.perm_identity,
               ),
               title: const Text('Add Category'),
               onTap: () {
@@ -285,7 +312,7 @@ class _HomePageState extends ConsumerState<HomePage> {
             ),
             ListTile(
               leading: const Icon(
-                Icons.account_circle,
+                Icons.vertical_distribute,
               ),
               title: const Text('Add Inventory'),
               onTap: () {
@@ -297,7 +324,7 @@ class _HomePageState extends ConsumerState<HomePage> {
             ),
             ListTile(
               leading: const Icon(
-                Icons.account_circle,
+                Icons.signal_cellular_alt_rounded,
               ),
               title: const Text('Update Inventory'),
               onTap: () {
@@ -321,7 +348,7 @@ class _HomePageState extends ConsumerState<HomePage> {
             ),
             ListTile(
               leading: const Icon(
-                Icons.account_circle,
+                Icons.shop_2_rounded,
               ),
               title: const Text('Purchase history'),
               onTap: () {
@@ -335,18 +362,24 @@ class _HomePageState extends ConsumerState<HomePage> {
               leading: const Icon(
                 Icons.scale_sharp,
               ),
-              title: const Text('Total Stock All Time( not done )'),
+              title: const Text('Manage team workers'),
               onTap: () {
-                Navigator.pop(context);
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const WorkersList()));
               },
             ),
             ListTile(
               leading: const Icon(
-                Icons.inbox,
+                Icons.offline_bolt,
               ),
-              title: const Text('Invoices of the Items Bought (not done)'),
+              title: const Text('Orders'),
               onTap: () {
-                Navigator.pop(context);
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const AddUseOrderWidget()));
               },
             ),
           ],

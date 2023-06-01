@@ -2,32 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistem/providers/purchaseorders_provider.dart';
 import 'package:sistem/screens/ShowOrders/orderDetails.dart';
+import 'package:sistem/widgets/app_bar_widget.dart';
 
 class ShowOrders extends ConsumerWidget {
   const ShowOrders({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final orders = ref.watch(purchaseOrdersProvider).value ?? [];
-
-    // Split the orders into received and not received
-    final receivedOrders =
-        orders.where((order) => order.received == true).toList();
-    final notReceivedOrders =
-        orders.where((order) => order.received != true).toList();
+    final receivedOrders = ref
+            .watch(purchaseOrdersProvider)
+            .value
+            ?.where((order) => order.received == true)
+            .toList() ??
+        [];
+    final notReceivedOrders = ref
+            .watch(purchaseOrdersProvider)
+            .value
+            ?.where((order) => order.received != true)
+            .toList() ??
+        [];
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.blue,
-        elevation: 0,
-        title: const Text(
-          'Purchase Orders',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        centerTitle: true,
+      appBar: AppBarFragment(
+        title: 'Purchase Orders',
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistem/models/CategoryOfItems.dart';
 import 'package:sistem/providers/category_provider.dart';
 import 'package:sistem/screens/show_item_in_category.dart';
+import 'package:sistem/widgets/app_bar_widget.dart';
 
 import '../providers/category_information.dart';
 
@@ -15,8 +16,8 @@ class AllInventory extends ConsumerStatefulWidget {
 }
 
 class _AllInventoryState extends ConsumerState<AllInventory> {
-  //Query Database and get All Items with this folder name
-  //Redundant code
+  // Query Database and get All Items with this folder name
+  // Redundant code
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +30,9 @@ class _AllInventoryState extends ConsumerState<AllInventory> {
         foldersList?.map((items) => items.id) ?? [];
 
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBarFragment(
+        title: 'Show Categories',
+      ),
       body: Column(
         children: [
           Row(
@@ -42,25 +45,15 @@ class _AllInventoryState extends ConsumerState<AllInventory> {
                     const Text('No of Categories'),
                     Text(
                       noOfCategory.toString(),
-                    )
+                    ),
                   ],
                 ),
               ),
               Row(
-                children: [
-                  const SizedBox(
+                children: const [
+                  SizedBox(
                     height: 100,
                   ),
-                  SizedBox(
-                    child: Column(
-                      children: [
-                        const Text('Total Value of Categories'),
-                        Text(
-                          noOfCategory.toString(),
-                        ),
-                      ],
-                    ),
-                  )
                 ],
               )
             ],
@@ -68,16 +61,25 @@ class _AllInventoryState extends ConsumerState<AllInventory> {
           SizedBox(
             height: 500,
             child: ListView.builder(
-                itemCount: allCategory.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
+              itemCount: allCategory.length,
+              itemBuilder: (context, index) {
+                return Container(
+                  decoration: const BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                  child: ListTile(
                     title: Text(allCategory.elementAt(index)),
                     onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: ((context) => ShowCategory(
-                              allCategory.elementAt(index),
-                              allCategoryid.elementAt(index)))),
+                        builder: ((context) => ShowCategory(
+                            allCategory.elementAt(index),
+                            allCategoryid.elementAt(index))),
+                      ),
                     ),
                     trailing: IconButton(
                       icon: const Icon(Icons.delete),
@@ -91,9 +93,11 @@ class _AllInventoryState extends ConsumerState<AllInventory> {
                         await Amplify.DataStore.delete(itemToDelete);
                       },
                     ),
-                  );
-                }),
-          )
+                  ),
+                );
+              },
+            ),
+          ),
         ],
       ),
     );

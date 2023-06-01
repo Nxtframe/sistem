@@ -7,6 +7,7 @@ import 'package:sistem/screens/info_input_screen.dart';
 
 import '../../helpers/query_database_exists.dart';
 import '../../helpers/userData.dart';
+import '../../theme/theme_constants.dart';
 
 // To Refactor Prio - 1
 //Use SharedPreferences MOFO
@@ -47,10 +48,12 @@ class _IsRegisteredState extends ConsumerState<IsRegistered> {
         } else {
           if (snapshot.data == true) {
             // User is registered to Database
-            return const MaterialApp(home: Scaffold(body: HomePage()));
+            return MaterialApp(
+                theme: LightTheme, home: const Scaffold(body: HomePage()));
           } else {
             // User is not registered to Database
-            return const MaterialApp(home: Scaffold(body: InfoInput()));
+            return MaterialApp(
+                theme: LightTheme, home: const Scaffold(body: InfoInput()));
           }
         }
       },

@@ -1,19 +1,26 @@
+import 'dart:convert';
+
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:sistem/models/PurchaseOrders.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sistem/models/ModelProvider.dart';
+import 'package:sistem/providers/oranganization_provider.dart';
+import 'package:sistem/widgets/app_bar_widget.dart';
+import 'package:uuid/uuid.dart';
 
-class OrderDetailsScreen extends StatelessWidget {
+class OrderDetailsScreen extends ConsumerWidget {
   final PurchaseOrders order;
 
   const OrderDetailsScreen({Key? key, required this.order}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final orgId = ref.watch(organizationIdProvider).value;
     final bool isOrderReceived = order.received ?? false;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Order Details'),
+      appBar: AppBarFragment(
+        title: 'Order Details',
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -44,13 +51,44 @@ class OrderDetailsScreen extends StatelessWidget {
                         received: true,
                         noofinventoryitems: order.noofinventoryitems,
                       );
+                      Amplify.DataStore.save(updatedOrder).then((value) async {
+                        // Decode the JSON string
+                        final decodedItems =
+                            jsonDecode(order.noofinventoryitems!)
+                                as Map<String, dynamic>;
 
-                      Amplify.DataStore.save(updatedOrder).then((value) {
+                        // Update the quantities of each inventory item
+                        for (var entry in decodedItems.entries) {
+                          final itemId = entry.key;
+                          final quantity = entry.value;
+
+                          final queryResult = await Amplify.DataStore.query(
+                              Inventory.classType,
+                              where: Inventory.ID.eq(itemId));
+                          final List<Inventory> items = queryResult;
+
+                          if (items.isNotEmpty) {
+                            final item = items.first;
+                            final updatedItem = item.copyWith(
+                                stock_no: item.stock_no! +
+                                    int.parse(quantity.toString()));
+
+                            await Amplify.DataStore.save(updatedItem);
+
+                            final stockTrans = StockTransaction(
+                                organizationID: orgId!,
+                                date: TemporalDate.now(),
+                                id: const Uuid().v4(),
+                                quantity: quantity);
+
+                            await Amplify.DataStore.save(stockTrans);
+                          }
+                        }
+
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                               content: Text('Order marked as received')),
                         );
-                        Navigator.pop(context);
                       }).catchError((error) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(

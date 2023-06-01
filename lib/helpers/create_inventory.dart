@@ -4,13 +4,14 @@ import 'package:sistem/providers/oranganization_provider.dart';
 import 'package:uuid/uuid.dart';
 
 Future<void> saveInventory(String stockName, String categoryId,
-    double stockPrice, int stockNo, ref) async {
+    double stockPrice, int stockNo, List<String> stockImage, ref) async {
   final organisationid = ref.watch(organizationIdProvider).value;
   final now = DateTime.now();
   final formattedDate =
       '${now.year}-${_addLeadingZero(now.month)}-${_addLeadingZero(now.day)}';
 
   final newInventory = Inventory(
+      stock_image: stockImage,
       stock_name: stockName,
       stock_price: stockPrice,
       stock_created: formattedDate,
