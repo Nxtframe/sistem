@@ -15,6 +15,7 @@ Future<String?> queryOrgansationIdFromEmail() async {
       throw Error();
     }
   } catch (e) {
+    safePrint('Error occurred: $e');
     return 'Catch this';
   }
 }

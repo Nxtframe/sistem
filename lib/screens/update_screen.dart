@@ -112,13 +112,14 @@ class _UpdateInventoryScreenState extends ConsumerState<UpdateInventoryScreen> {
               const SizedBox(height: 32.0),
               ElevatedButton(
                 onPressed: () async {
-                  if (quantityController.text.isEmpty ||
-                      int.parse(quantityController.text) -
-                              inventorySus
-                                  .firstWhere((element) =>
-                                      element.stock_name == selectedValue)
-                                  .stock_no! <
-                          0) {
+                  if ((quantityController.text.isEmpty ||
+                          (inventorySus
+                                      .firstWhere((element) =>
+                                          element.stock_name == selectedValue)
+                                      .stock_no! -
+                                  int.parse(quantityController.text) <=
+                              0)) &&
+                      addOrMinus == false) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                           content:

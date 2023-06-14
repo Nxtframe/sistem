@@ -197,21 +197,9 @@ class _SingleInventoryState extends State<SingleInventory> {
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.grey),
                   ),
-                  child: Column(
+                  child: const Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text("Min Level"),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text("0"),
-                          IconButton(
-                            icon: const Icon(FontAwesomeIcons.bell),
-                            onPressed: () {},
-                          ),
-                        ],
-                      ),
-                    ],
+                    children: [],
                   ),
                 ),
                 const SizedBox(height: 50),

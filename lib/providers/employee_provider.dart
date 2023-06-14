@@ -13,7 +13,7 @@ final employeeProvider = FutureProvider<Employee>((ref) async {
 // Example fetchData function
 Future<Employee> fetchData() async {
   final user = await Amplify.Auth.getCurrentUser();
-
+  safePrint(user.username);
   // Replace with your own logic to fetch employee data from an API or database
   final List<Employee> employee = await Amplify.DataStore.query(
       Employee.classType,

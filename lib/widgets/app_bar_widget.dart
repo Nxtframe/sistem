@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistem/theme/app_theme.dart';
 
 // ignore: must_be_immutable
-class AppBarFragment extends ConsumerWidget with PreferredSizeWidget {
+class AppBarFragment extends ConsumerWidget implements PreferredSizeWidget {
   AppBarFragment({
     super.key,
     this.title,

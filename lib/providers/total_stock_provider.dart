@@ -14,7 +14,6 @@ final totalStockProvider =
   StreamController<List<StockTransaction>> controller =
       StreamController<List<StockTransaction>>();
 
-  // Listen to changes to CategoryOfItems data in Amplify DataStore
   StreamSubscription<QuerySnapshot<StockTransaction>> subscription =
       Amplify.DataStore.observeQuery(StockTransaction.classType,
               where: StockTransaction.ORGANIZATIONID.eq(

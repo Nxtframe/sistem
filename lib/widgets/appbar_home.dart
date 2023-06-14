@@ -6,7 +6,7 @@ import 'package:sistem/providers/profile_info.dart';
 import 'package:sistem/theme/app_theme.dart';
 
 // ignore: must_be_immutable
-class AppBarWidget extends ConsumerWidget with PreferredSizeWidget {
+class AppBarWidget extends ConsumerWidget implements PreferredSizeWidget {
   AppBarWidget({
     super.key,
   });

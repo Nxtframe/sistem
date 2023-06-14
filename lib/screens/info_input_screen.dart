@@ -132,7 +132,7 @@ class _InfoInputState extends ConsumerState<InfoInput> {
                       ),
                 TextFormField(
                   decoration: const InputDecoration(
-                    labelText: 'Name',
+                    labelText: 'Nickname',
                   ),
                   controller: _employeeName,
                   validator: (value) => _validateEmptyString(value!),
@@ -169,7 +169,7 @@ class _InfoInputState extends ConsumerState<InfoInput> {
                           try {
                             if (await queryDatabase(
                                 _organisation_Id_Controller.text)) {
-                              final result = saveEmployee(
+                              await saveEmployee(
                                 'Employee',
                                 _organisation_Id_Controller.text,
                                 int.parse(_employeePhone.text),

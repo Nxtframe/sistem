@@ -63,6 +63,20 @@
       },
       "storage": {
         "s3profile": {}
+      },
+      "notifications": {
+        "Pinpoint": {
+          "Name": "sistemNotif-devmser",
+          "Id": "6ced88a0e9db4f4ca13461903ef8c8d2",
+          "Region": "ap-northeast-2"
+        }
+      },
+      "analytics": {
+        "Pinpoint": {
+          "Name": "sistemNotif-devmser",
+          "Id": "6ced88a0e9db4f4ca13461903ef8c8d2",
+          "Region": "ap-northeast-2"
+        }
       }
     }
   }

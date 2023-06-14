@@ -48,12 +48,10 @@ class _IsRegisteredState extends ConsumerState<IsRegistered> {
         } else {
           if (snapshot.data == true) {
             // User is registered to Database
-            return MaterialApp(
-                theme: LightTheme, home: const Scaffold(body: HomePage()));
+            return const Scaffold(body: HomePage());
           } else {
             // User is not registered to Database
-            return MaterialApp(
-                theme: LightTheme, home: const Scaffold(body: InfoInput()));
+            return const Scaffold(body: InfoInput());
           }
         }
       },

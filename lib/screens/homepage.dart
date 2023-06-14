@@ -9,6 +9,7 @@ import 'package:sistem/screens/About/about.dart';
 import 'package:sistem/screens/Profile/profile_user.dart';
 import 'package:sistem/screens/ShowOrders/showOrders.dart';
 import 'package:sistem/screens/Team/team_employees.dart';
+import 'package:sistem/screens/UseOrders/showUseOrders.dart';
 import 'package:sistem/screens/UseOrders/use_orders.dart';
 import 'package:sistem/screens/add_category.dart';
 import 'package:sistem/screens/add_inventory.dart';
@@ -51,13 +52,53 @@ class _HomePageState extends ConsumerState<HomePage> {
     final avaliableItems = ref.watch(inventoryListProvider).value ?? [];
     final totalAvaliable = avaliableItems.length;
     final totalStock = ref.watch(totalStockProvider).value ?? [];
+    safePrint('This $totalStock');
+
     final totalStockQuantity = totalStock.fold<int>(
         0, (total, transaction) => total + (transaction.quantity ?? 0));
-    List<SalesData> dateQuantityList = totalStock
-        .map((transaction) =>
-            SalesData(transaction.date.toString(), transaction.quantity ?? 0))
+
+    // List<SalesData> dateQuantityList = totalStock
+    //     .map((transaction) =>
+    //         SalesData(transaction.date.toString(), transaction.quantity ?? 0))
+    //     .toList();
+    // safePrint(dateQuantityList);
+    final Map<DateTime, int> totalQuantityByDay = {};
+    for (var transaction in totalStock) {
+      final date = transaction.date;
+      final quantity = transaction.quantity ?? 0;
+      final dateTime = DateTime.parse(date.toString());
+      final dateOnly = DateTime(dateTime.year, dateTime.month, dateTime.day);
+      totalQuantityByDay[dateOnly] ??= 0;
+      totalQuantityByDay[dateOnly] = totalQuantityByDay[dateOnly]! + quantity;
+    }
+    final dateQuantityList = totalQuantityByDay.entries
+        .map((entry) => SalesData(entry.key.toString(), entry.value))
         .toList();
-    safePrint(dateQuantityList);
+
+    Future<void> _handleLogout() async {
+      await Amplify.Auth.signOut();
+      await Amplify.DataStore.clear();
+      await isRegisteredSPDestroy();
+      // Clear the user-related providers
+      ref.refresh(userInfo);
+      ref.refresh(inventoryListProvider);
+      ref.refresh(totalStockProvider);
+      // Clear any other necessary providers and variables
+
+      // Refresh the UI
+      setState(() {
+        avaliableItems.clear();
+        totalStock.clear();
+        // Clear any other necessary variables
+      });
+
+      // Navigate to the SignInPage
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const SignInPage()),
+      );
+    }
+
     return Scaffold(
       appBar: AppBarWidget(),
       body: SingleChildScrollView(
@@ -101,7 +142,7 @@ class _HomePageState extends ConsumerState<HomePage> {
             height: 20,
           ),
           const Text(
-            "Order Overview",
+            "Stock Overview",
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
           ),
           SfCartesianChart(
@@ -169,15 +210,9 @@ class _HomePageState extends ConsumerState<HomePage> {
                 height: 45,
               ),
               GestureDetector(
-                onTap: () async => {
-                  await Amplify.Auth.signOut(),
-                  await Amplify.DataStore.clear(),
-                  await isRegisteredSPDestroy(),
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const SignInPage()))
-                },
+                // Inside the logout onTap event
+                onTap: _handleLogout,
+
                 child: const Text(
                   'Log Out',
                   style: TextStyle(
@@ -284,6 +319,18 @@ class _HomePageState extends ConsumerState<HomePage> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => const AllInventory()));
+              },
+            ),
+            ListTile(
+              leading: const Icon(
+                Icons.offline_bolt,
+              ),
+              title: const Text('Show Use Orders'),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const ShowUseOrdersWidget()));
               },
             ),
             ListTile(

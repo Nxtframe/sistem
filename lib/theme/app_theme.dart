@@ -8,7 +8,6 @@ class AppTheme {
     this.appBarColor = 0xFFE4ECEF,
     this.backgroundColor = 0xFF0B1432,
     this.splashscreen = 0xFFf3f3f4,
-    // this.loginBackgroundColor=0xff0f1010,
-    this.loginBackgroundColor = 0xFFFF,
+    this.loginBackgroundColor = 0xff0f1010,
   });
 }
