@@ -13,15 +13,9 @@ To run this app, follow the steps below:
 ## Example Images
 
 Here are some example images showcasing the features of the SISTEM app:
+![Screenshot_1685585840](https://github.com/Nxtframe/sistem/assets/44863696/79241739-db1d-41a7-92fd-d732462c5e5c)
 
-![Screenshot 1](https://raw.githubusercontent.com/Nxtframe/sistem/assets/44863696/9b39796f-330e-4a9f-bb68-c73bdd7c3bf9)
-
-
-![Screenshot 2](https://raw.githubusercontent.com/Nxtframe/sistem/assets/44863696/419250bb-d363-4a07-bdba-c9a7152ff0e1)
-
-
-![Screenshot 3](https://raw.githubusercontent.com/Nxtframe/sistem/assets/44863696/bf73ed12-cdba-4690-9980-29ceaeeb8bd0)
-
+![Screenshot_1685588170](https://github.com/Nxtframe/sistem/assets/44863696/12941c61-4185-4f4c-8a3a-86a2884aaf6d)
 
 Feel free to explore the SISTEM app and its features!
 
